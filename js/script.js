@@ -2,47 +2,52 @@
 // DATACAMP LANDING PAGE - INTERACTIVE FEATURES
 // ==========================================
 
-// Dark Mode Toggle
-const themeToggle = document.getElementById('themeToggle');
-const htmlElement = document.documentElement;
+// Skip theme setup on dashboard - dashboard.js handles it
+const isDashboardPage = document.querySelector('.dashboard-main') !== null;
 
-// Initialize theme from localStorage
-function initializeTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    htmlElement.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(savedTheme);
-}
+// Dark Mode Toggle (Landing page and auth pages only)
+if (!isDashboardPage) {
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlElement = document.documentElement;
 
-// Update theme icon
-function updateThemeIcon(theme) {
-    if (themeToggle) {
-        const icon = themeToggle.querySelector('.theme-toggle-icon');
-        if (icon) {
-            icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    // Initialize theme from localStorage
+    function initializeTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+    }
+
+    // Update theme icon
+    function updateThemeIcon(theme) {
+        if (themeToggle) {
+            const icon = themeToggle.querySelector('.theme-toggle-icon');
+            if (icon) {
+                icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
         }
     }
-}
 
-// Toggle theme
-if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = htmlElement.getAttribute('data-theme') || 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        htmlElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateThemeIcon(newTheme);
-    });
-}
+    // Toggle theme
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+    }
 
-// Initialize theme on page load
-initializeTheme();
+    // Initialize theme on page load
+    initializeTheme();
+}
 
 // Mobile Menu Toggle
 const menuToggle = document.getElementById('menuToggle');
 const navMenu = document.getElementById('navMenu');
 
-if (menuToggle) {
+if (menuToggle && navMenu) {
     menuToggle.addEventListener('click', () => {
         navMenu.classList.toggle('active');
         
@@ -55,7 +60,9 @@ if (menuToggle) {
 const navLinks = document.querySelectorAll('.nav-menu a');
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
+        if (navMenu) {
+            navMenu.classList.remove('active');
+        }
         if (menuToggle) {
             menuToggle.classList.remove('active');
         }
@@ -68,7 +75,9 @@ document.addEventListener('click', (e) => {
     const isClickInsideToggle = menuToggle?.contains(e.target);
     
     if (!isClickInsideMenu && !isClickInsideToggle && navMenu?.classList.contains('active')) {
-        navMenu.classList.remove('active');
+        if (navMenu) {
+            navMenu.classList.remove('active');
+        }
         if (menuToggle) {
             menuToggle.classList.remove('active');
         }
@@ -132,7 +141,7 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// CTA Button Clicks - Add feedback
+// CTA Button Clicks - Add feedback and navigation
 const ctaButtons = document.querySelectorAll('.cta-btn');
 ctaButtons.forEach(button => {
     button.addEventListener('click', (e) => {
@@ -142,7 +151,33 @@ ctaButtons.forEach(button => {
             button.style.transform = '';
         }, 200);
 
-        // Log action (you can replace this with actual sign-up logic)
+        // Check if button is in pricing card
+        const isPricingCard = button.closest('.pricing-card');
+        const buttonText = button.textContent.toLowerCase().trim();
+        
+        // If button is in pricing card and says "sign up free" or "try it", navigate to signup
+        if (isPricingCard && (buttonText.includes('sign up') || buttonText.includes('try it'))) {
+            e.preventDefault();
+            window.location.href = 'signup.html';
+        } 
+        // If it's a contact sales button, do nothing special
+        else if (buttonText.includes('contact sales')) {
+            e.preventDefault();
+            console.log('Contact Sales clicked');
+        }
+        // Otherwise, scroll to pricing section
+        else if (button.closest('section:not(.pricing)')) {
+            e.preventDefault();
+            const pricingSection = document.querySelector('#pricing');
+            if (pricingSection) {
+                pricingSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        // Log action
         console.log('CTA Button clicked:', button.textContent);
     });
 });
@@ -154,10 +189,12 @@ const navbar = document.querySelector('.navbar');
 window.addEventListener('scroll', () => {
     let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     
-    if (scrollTop > 100) {
-        navbar.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+    if (navbar) {
+        if (scrollTop > 100) {
+            navbar.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+        } else {
+            navbar.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+        }
     }
     
     lastScrollTop = scrollTop;
@@ -228,7 +265,9 @@ window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
         if (window.innerWidth > 768) {
-            navMenu.classList.remove('active');
+            if (navMenu) {
+                navMenu.classList.remove('active');
+            }
             if (menuToggle) {
                 menuToggle.classList.remove('active');
             }

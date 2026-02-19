@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DataCamp</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="dashboard-header">
+        <div class="dashboard-nav-container">
+            <div class="dashboard-logo">
+                <a href="index.html">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <nav class="dashboard-nav-menu">
+                <a href="#" class="nav-link">Home</a>
+                <a href="#" class="nav-link">Lineup</a>
+                <a href="#" class="nav-link">Pings</a>
+                <a href="#" class="nav-link">Hey!</a>
+                <a href="#" class="nav-link">Activity</a>
+                <a href="#" class="nav-link">My Stuff</a>
+                <a href="#" class="nav-link">Find</a>
+            </nav>
+
+            <div class="dashboard-nav-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span class="theme-toggle-icon">🌙</span>
+                </button>
+                <div class="user-profile">
+                    <img src="https://placehold.co/32" alt="User Profile" class="profile-avatar">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <!-- Header Section -->
+            <section class="dashboard-header-section">
+                <h1 class="dashboard-title">Data Prove</h1>
+                <div class="dashboard-actions">
+                    <button class="btn btn-primary">Make a new project</button>
+                    <button class="btn btn-secondary">Invite people</button>
+                </div>
+                <div class="dashboard-help-text">
+                    <strong>View templates</strong> · Press <kbd>Ctrl+J</kbd> anytime to jump
+                </div>
+            </section>
+
+            <!-- Sample Projects Section -->
+            <section class="projects-section">
+                <h2 class="section-title">SAMPLE PROJECTS</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-tag">Sample</div>
+                        <h3 class="project-name">Getting Started</h3>
+                        <p class="project-description">Quickly get up to speed with everything Basecamp</p>
+                        <div class="project-avatar">
+                            <div class="avatar-circle">👤</div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-tag">Sample</div>
+                        <h3 class="project-name">Making a Podcast</h3>
+                        <p class="project-description">🎙️ This is a sample project to showcase how we use Basecamp to make a podcast called REWORK. Take a look...</p>
+                        <div class="project-avatars">
+                            <div class="avatar-stack">
+                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
+                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
+                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
+                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
+                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schedule and Assignments Section -->
+            <section class="dashboard-grid">
+                <!-- Schedule Section -->
+                <div class="schedule-section">
+                    <h2 class="section-title">YOUR SCHEDULE</h2>
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <button class="calendar-nav">&lt;</button>
+                            <h3 class="calendar-month">February</h3>
+                            <button class="calendar-nav">&gt;</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div class="weekday">SUN</div>
+                            <div class="weekday">MON</div>
+                            <div class="weekday">TUE</div>
+                            <div class="weekday">WED</div>
+                            <div class="weekday">THU</div>
+                            <div class="weekday">FRI</div>
+                            <div class="weekday">SAT</div>
+                        </div>
+                        <div class="calendar-days">
+                            <div class="day">1</div>
+                            <div class="day">2</div>
+                            <div class="day">3</div>
+                            <div class="day">4</div>
+                            <div class="day">5</div>
+                            <div class="day">6</div>
+                            <div class="day">7</div>
+                            <div class="day">8</div>
+                            <div class="day">9</div>
+                            <div class="day">10</div>
+                            <div class="day">11</div>
+                            <div class="day">12</div>
+                            <div class="day">13</div>
+                            <div class="day">14</div>
+                            <div class="day">15</div>
+                            <div class="day">16</div>
+                            <div class="day">17</div>
+                            <div class="day">18</div>
+                            <div class="day today">19</div>
+                            <div class="day">20</div>
+                            <div class="day">21</div>
+                            <div class="day">22</div>
+                            <div class="day">23</div>
+                            <div class="day">24</div>
+                            <div class="day">25</div>
+                            <div class="day">26</div>
+                            <div class="day">27</div>
+                            <div class="day">28</div>
+                        </div>
+                    </div>
+                    <div class="calendar-event">
+                        <span class="event-date">THU, FEB 19</span>
+                        <span class="event-text">Nothing's on the schedule</span>
+                    </div>
+                </div>
+
+                <!-- Assignments Section -->
+                <div class="assignments-section">
+                    <h2 class="section-title">YOUR ASSIGNMENTS</h2>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✓</div>
+                        <p class="empty-state-title">You don't have any assignments right now. To dos and cards assigned to you will show up here.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer Banner -->
+    <footer class="dashboard-footer">
+        <p>Upgrade today for ⚡ Unlimited projects · Tons of storage · No user limits · <a href="#">See your options</a></p>
+    </footer>
+
+    <!-- Modals -->
+    <!-- Make a New Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Make a New Project</h2>
+            <form class="modal-form">
+                <div class="form-group">
+                    <label for="projectName">Project Name</label>
+                    <input type="text" id="projectName" placeholder="Enter project name" required>
+                </div>
+                <div class="form-group">
+                    <label for="projectDesc">Description</label>
+                    <textarea id="projectDesc" placeholder="Brief project description" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="projectTemplate">Project Template</label>
+                    <select id="projectTemplate">
+                        <option value="">Start from scratch</option>
+                        <option value="podcast">Making a Podcast</option>
+                        <option value="startup">Startup</option>
+                        <option value="agency">Creative Agency</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Project</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Invite People Modal -->
+    <div id="inviteModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Invite People</h2>
+            <form class="modal-form">
+                <div class="form-group">
+                    <label for="inviteEmails">Email Addresses</label>
+                    <textarea id="inviteEmails" placeholder="Enter email addresses (one per line)" rows="6"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="inviteRole">Role</label>
+                    <select id="inviteRole">
+                        <option value="member">Team Member</option>
+                        <option value="manager">Manager</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="inviteNotify"> Send invitation email
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Invitations</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Project Detail Modal -->
+    <div id="projectDetailModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="projectDetailContent">
+                <!-- Dynamically filled -->
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+    <script src="./js/dashboard.js"></script>
+</body>
+</html>
