@@ -1,13 +1,11 @@
 {
   "version": 2,
-  "buildCommand": "cd backend && npm install",
-  "public": false,
-  "functions": {
-    "backend/src/server.js": {
-      "memory": 1024,
-      "maxDuration": 60
+  "builds": [
+    {
+      "src": "backend/src/server.js",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
@@ -16,12 +14,6 @@
     {
       "src": "/(.*)",
       "dest": "backend/src/server.js"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/:path*",
-      "destination": "/backend/src/server.js"
     }
   ]
 }
