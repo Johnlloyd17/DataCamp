@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lineup - DataCamp</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <title>Find - DataCamp</title>
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
     <!-- Header/Navigation -->
@@ -16,12 +16,12 @@
             
             <nav class="dashboard-nav-menu">
                 <a href="dashboard.html" class="nav-link">Home</a>
-                <a href="lineup.html" class="nav-link active">Lineup</a>
+                <a href="lineup.html" class="nav-link">Lineup</a>
                 <a href="pings.html" class="nav-link">Pings</a>
                 <a href="hey.html" class="nav-link">Hey!</a>
                 <a href="activity.html" class="nav-link">Activity</a>
                 <a href="my-stuff.html" class="nav-link">My Stuff</a>
-                <a href="find.html" class="nav-link">Find</a>
+                <a href="find.html" class="nav-link active">Find</a>
             </nav>
 
             <div class="dashboard-nav-right">
@@ -70,51 +70,37 @@
 
     <!-- Main Content -->
     <main class="dashboard-main">
-        <div class="lineup-container">
-            <!-- Lineup Header -->
-            <div class="lineup-header">
-                <div class="lineup-nav">
-                    <button class="btn btn-secondary btn-small">← Prev 6 weeks</button>
-                    <div class="lineup-today">
-                        <button class="btn btn-success">Today, Fri 20 Feb</button>
-                    </div>
-                    <button class="btn btn-secondary btn-small">Next 6 weeks →</button>
-                </div>
-                <button class="btn btn-secondary btn-small">+ Add marker</button>
-            </div>
-
-            <!-- Timeline View -->
-            <div class="timeline-wrapper">
-                <div class="timeline-container">
-                    <div class="timeline-header">
-                        <div class="timeline-dates">
-                            <div class="timeline-week">05 Jan</div>
-                            <div class="timeline-week">12 Jan</div>
-                            <div class="timeline-week">19 Jan</div>
-                            <div class="timeline-week">26 Jan</div>
-                            <div class="timeline-week">02 Feb</div>
-                            <div class="timeline-week">09 Feb</div>
-                            <div class="timeline-week today-marker">16 Feb</div>
-                            <div class="timeline-week">23 Feb</div>
-                            <div class="timeline-week">02 Mar</div>
-                            <div class="timeline-week">09 Mar</div>
-                            <div class="timeline-week">16 Mar</div>
-                            <div class="timeline-week">23 Mar</div>
-                            <div class="timeline-week">30 Mar</div>
-                        </div>
-                    </div>
+        <div class="dashboard-container">
+            <section class="find-section">
+                <div class="find-container">
+                    <input type="text" class="find-search-input" placeholder="Search for..." title="Search">
                     
-                    <div class="timeline-content">
-                        <div class="timeline-today-line"></div>
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📅</div>
-                            <h3>Welcome to the Lineup!</h3>
-                            <p>Plot projects on a timeline for a visual snapshot of what's in play, who's working on what, and when projects start and end.</p>
-                            <p><a href="dashboard.html" class="add-link">Add start/end dates to a project to view it on the Lineup.</a></p>
-                        </div>
+                    <div class="find-filters">
+                        <select class="find-filter-select" title="Search scope">
+                            <option>Search Everything</option>
+                            <option>Search Messages</option>
+                            <option>Search Todos</option>
+                            <option>Search Documents</option>
+                        </select>
+                        
+                        <select class="find-filter-select" title="Filter by people">
+                            <option>by Anyone</option>
+                            <option>by Me</option>
+                            <option>by Specific Person</option>
+                        </select>
+                        
+                        <select class="find-filter-select" title="Search location">
+                            <option>Everywhere</option>
+                            <option>In a Specific Project</option>
+                            <option>In My Assignments</option>
+                        </select>
+                    </div>
+
+                    <div class="find-hint">
+                        · <a href="dashboard.html">View templates</a> · Press <kbd>Ctrl+J</kbd> anytime to jump
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </main>
 
@@ -123,7 +109,7 @@
         <p>Upgrade today for ⚡ Unlimited projects · Tons of storage · No user limits · <a href="#">See your options</a></p>
     </footer>
 
-    <script src="../js/script.js"></script>
-    <script src="../js/dashboard.js"></script>
+    <script src="./js/script.js"></script>
+    <script src="./js/dashboard.js"></script>
 </body>
 </html>

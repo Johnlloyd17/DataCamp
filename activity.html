@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pings - DataCamp</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <title>Activity - DataCamp</title>
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
     <!-- Header/Navigation -->
     <header class="dashboard-header">
         <div class="dashboard-nav-container">
             <div class="dashboard-logo">
-                <h1><a href="dashboard.html" style="color: var(--primary-color); text-decoration: none;">DataCamp</a></h1>
+                <h1><a href="dashboard.html" style="color: var(--prry-color); text-decoration: none;">DataCamp</a></h1>
             </div>
             
             <nav class="dashboard-nav-menu">
                 <a href="dashboard.html" class="nav-link">Home</a>
                 <a href="lineup.html" class="nav-link">Lineup</a>
-                <a href="pings.html" class="nav-link active">Pings</a>
+                <a href="pings.html" class="nav-link">Pings</a>
                 <a href="hey.html" class="nav-link">Hey!</a>
-                <a href="activity.html" class="nav-link">Activity</a>
+                <a href="activity.html" class="nav-link active">Activity</a>
                 <a href="my-stuff.html" class="nav-link">My Stuff</a>
                 <a href="find.html" class="nav-link">Find</a>
             </nav>
@@ -71,17 +71,26 @@
     <!-- Main Content -->
     <main class="dashboard-main">
         <div class="dashboard-container">
-            <section class="pings-section">
-                <div class="pings-content">
-                    <h2>Pings</h2>
-                    <input type="text" class="pings-search-input" placeholder="Start a private chat with..." title="Search for a person">
-                    
-                    <div class="pings-info">
-                        <div class="pings-info-icon">↗</div>
-                        <div class="pings-info-text">
-                            <h3>Pings are private chats with one or more people</h3>
-                            <p>Start your first conversation by typing someone's name.</p>
-                        </div>
+            <section class="activity-section">
+                <div class="activity-header">
+                    <h1>Latest Activity</h1>
+                    <div class="activity-controls">
+                        <button class="btn btn-secondary">Choose a report ▾</button>
+                        <div class="activity-status">✓ Emailing a daily summary</div>
+                    </div>
+                </div>
+
+                <div class="activity-filters">
+                    <button class="filter-btn active">Everything</button>
+                    <button class="filter-btn">Filter by projects</button>
+                    <button class="filter-btn">Filter by people</button>
+                </div>
+
+                <div class="activity-feed">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔔</div>
+                        <h3>No activity just yet</h3>
+                        <p>Get an overview of what's happening across DataCamp right here.</p>
                     </div>
                 </div>
             </section>
@@ -93,7 +102,7 @@
         <p>Upgrade today for ⚡ Unlimited projects · Tons of storage · No user limits · <a href="#">See your options</a></p>
     </footer>
 
-    <script src="../js/script.js"></script>
-    <script src="../js/dashboard.js"></script>
+    <script src="./js/script.js"></script>
+    <script src="./js/dashboard.js"></script>
 </body>
 </html>
