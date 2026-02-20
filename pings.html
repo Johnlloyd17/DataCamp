@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pings - DataCamp</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="dashboard-header">
+        <div class="dashboard-nav-container">
+            <div class="dashboard-logo">
+                <h1><a href="dashboard.html" style="color: var(--primary-color); text-decoration: none;">DataCamp</a></h1>
+            </div>
+            
+            <nav class="dashboard-nav-menu">
+                <a href="dashboard.html" class="nav-link">Home</a>
+                <a href="lineup.html" class="nav-link">Lineup</a>
+                <a href="pings.html" class="nav-link active">Pings</a>
+                <a href="hey.html" class="nav-link">Hey!</a>
+                <a href="activity.html" class="nav-link">Activity</a>
+                <a href="my-stuff.html" class="nav-link">My Stuff</a>
+                <a href="find.html" class="nav-link">Find</a>
+            </nav>
+
+            <div class="dashboard-nav-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span class="theme-toggle-icon">🌙</span>
+                </button>
+                <div class="user-profile-container">
+                    <button class="user-profile" id="userProfileBtn" aria-label="User menu">
+                        <img src="https://placehold.co/32" alt="User Profile" class="profile-avatar">
+                    </button>
+                    <div class="user-dropdown-menu" id="userDropdown">
+                        <div class="dropdown-header">
+                            <img src="https://placehold.co/40" alt="User Profile" class="dropdown-avatar">
+                            <div class="dropdown-user-info">
+                                <p class="dropdown-username">John Lloyd Caban</p>
+                                <p class="dropdown-email">john.caban@example.com</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">👤</span>
+                            <span>Profile</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">🔔</span>
+                            <span>Notifications</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">❓</span>
+                            <span>Help & Support</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-logout">
+                            <span class="dropdown-icon">🚪</span>
+                            <span>Log out</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <section class="pings-section">
+                <div class="pings-content">
+                    <h2>Pings</h2>
+                    <input type="text" class="pings-search-input" placeholder="Start a private chat with..." title="Search for a person">
+                    
+                    <div class="pings-info">
+                        <div class="pings-info-icon">↗</div>
+                        <div class="pings-info-text">
+                            <h3>Pings are private chats with one or more people</h3>
+                            <p>Start your first conversation by typing someone's name.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer Banner -->
+    <footer class="dashboard-footer">
+        <p>Upgrade today for ⚡ Unlimited projects · Tons of storage · No user limits · <a href="#">See your options</a></p>
+    </footer>
+
+    <script src="./js/script.js"></script>
+    <script src="./js/dashboard.js"></script>
+</body>
+</html>

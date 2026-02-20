@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Free - DataCamp</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <!-- Sign Up Section -->
+    <section class="auth-section">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1>Sign up for DataCamp Free</h1>
+            </div>
+            <div class="auth-box signup-box">
+                <p class="auth-subtitle">Just need a few things to get you going...</p>
+                <form class="auth-form" id="signupForm">
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label for="fullname">Your name</label>
+                        <input 
+                            type="text" 
+                            id="fullname" 
+                            name="fullname" 
+                            placeholder="John Doe" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Your email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="e.g. john@example.com" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Organization -->
+                    <div class="form-group">
+                        <label for="organization">Your organization's name</label>
+                        <input 
+                            type="text" 
+                            id="organization" 
+                            name="organization" 
+                            placeholder="Acme Corporation" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Terms Agreement -->
+                    <div class="form-group checkbox">
+                        <input 
+                            type="checkbox" 
+                            id="terms" 
+                            name="terms" 
+                            required
+                        >
+                        <label for="terms">I agree to DataCamp <a href="#" class="link">Terms</a> and <a href="#" class="link">Privacy Policy</a>.</label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="cta-btn primary auth-submit">Last step: set a password →</button>
+                </form>
+
+                <!-- Support Link -->
+                <div class="auth-support">
+                    <p>Questions? Need a hand? <a href="#" class="support-link">Support can help</a></p>
+                </div>
+
+                <!-- Sign In Link -->
+                <div class="auth-footer">
+                    <p class="text-center">Already have an account? <a href="signin.html" class="signin-link">Sign in</a></p>
+                    <p class="text-center" style="margin-top: 15px;"><a href="index.html#pricing" class="signin-link">View pricing plans instead</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="./js/script.js"></script>
+    <script src="./js/auth.js"></script>
+</body>
+</html>

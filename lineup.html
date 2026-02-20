@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lineup - DataCamp</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="dashboard-header">
+        <div class="dashboard-nav-container">
+            <div class="dashboard-logo">
+                <h1><a href="dashboard.html" style="color: var(--primary-color); text-decoration: none;">DataCamp</a></h1>
+            </div>
+            
+            <nav class="dashboard-nav-menu">
+                <a href="dashboard.html" class="nav-link">Home</a>
+                <a href="lineup.html" class="nav-link active">Lineup</a>
+                <a href="pings.html" class="nav-link">Pings</a>
+                <a href="hey.html" class="nav-link">Hey!</a>
+                <a href="activity.html" class="nav-link">Activity</a>
+                <a href="my-stuff.html" class="nav-link">My Stuff</a>
+                <a href="find.html" class="nav-link">Find</a>
+            </nav>
+
+            <div class="dashboard-nav-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span class="theme-toggle-icon">🌙</span>
+                </button>
+                <div class="user-profile-container">
+                    <button class="user-profile" id="userProfileBtn" aria-label="User menu">
+                        <img src="https://placehold.co/32" alt="User Profile" class="profile-avatar">
+                    </button>
+                    <div class="user-dropdown-menu" id="userDropdown">
+                        <div class="dropdown-header">
+                            <img src="https://placehold.co/40" alt="User Profile" class="dropdown-avatar">
+                            <div class="dropdown-user-info">
+                                <p class="dropdown-username">John Lloyd Caban</p>
+                                <p class="dropdown-email">john.caban@example.com</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">👤</span>
+                            <span>Profile</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">🔔</span>
+                            <span>Notifications</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">❓</span>
+                            <span>Help & Support</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-logout">
+                            <span class="dropdown-icon">🚪</span>
+                            <span>Log out</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="lineup-container">
+            <!-- Lineup Header -->
+            <div class="lineup-header">
+                <div class="lineup-nav">
+                    <button class="btn btn-secondary btn-small">← Prev 6 weeks</button>
+                    <div class="lineup-today">
+                        <button class="btn btn-success">Today, Fri 20 Feb</button>
+                    </div>
+                    <button class="btn btn-secondary btn-small">Next 6 weeks →</button>
+                </div>
+                <button class="btn btn-secondary btn-small">+ Add marker</button>
+            </div>
+
+            <!-- Timeline View -->
+            <div class="timeline-wrapper">
+                <div class="timeline-container">
+                    <div class="timeline-header">
+                        <div class="timeline-dates">
+                            <div class="timeline-week">05 Jan</div>
+                            <div class="timeline-week">12 Jan</div>
+                            <div class="timeline-week">19 Jan</div>
+                            <div class="timeline-week">26 Jan</div>
+                            <div class="timeline-week">02 Feb</div>
+                            <div class="timeline-week">09 Feb</div>
+                            <div class="timeline-week today-marker">16 Feb</div>
+                            <div class="timeline-week">23 Feb</div>
+                            <div class="timeline-week">02 Mar</div>
+                            <div class="timeline-week">09 Mar</div>
+                            <div class="timeline-week">16 Mar</div>
+                            <div class="timeline-week">23 Mar</div>
+                            <div class="timeline-week">30 Mar</div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-content">
+                        <div class="timeline-today-line"></div>
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📅</div>
+                            <h3>Welcome to the Lineup!</h3>
+                            <p>Plot projects on a timeline for a visual snapshot of what's in play, who's working on what, and when projects start and end.</p>
+                            <p><a href="dashboard.html" class="add-link">Add start/end dates to a project to view it on the Lineup.</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Banner -->
+    <footer class="dashboard-footer">
+        <p>Upgrade today for ⚡ Unlimited projects · Tons of storage · No user limits · <a href="#">See your options</a></p>
+    </footer>
+
+    <script src="./js/script.js"></script>
+    <script src="./js/dashboard.js"></script>
+</body>
+</html>

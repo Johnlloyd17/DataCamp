@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DataCamp</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="dashboard-header">
+        <div class="dashboard-nav-container">
+            <div class="dashboard-logo">
+                <!-- <a href="dashboard.html">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                </a> -->
+                <h1><a href="dashboard.html" style="color: var(--primary-color); text-decoration: none;">DataCamp</a></h1>
+
+            </div>
+            
+            <nav class="dashboard-nav-menu">
+                <a href="dashboard.html" class="nav-link active">Home</a>
+                <a href="lineup.html" class="nav-link">Lineup</a>
+                <a href="pings.html" class="nav-link">Pings</a>
+                <a href="hey.html" class="nav-link">Hey!</a>
+                <a href="activity.html" class="nav-link">Activity</a>
+                <a href="my-stuff.html" class="nav-link">My Stuff</a>
+                <a href="find.html" class="nav-link">Find</a>
+            </nav>
+
+            <div class="dashboard-nav-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span class="theme-toggle-icon">🌙</span>
+                </button>
+                <div class="user-profile-container">
+                    <button class="user-profile" id="userProfileBtn" aria-label="User menu">
+                        <img src="https://placehold.co/32" alt="User Profile" class="profile-avatar">
+                    </button>
+                    <div class="user-dropdown-menu" id="userDropdown">
+                        <div class="dropdown-header">
+                            <img src="https://placehold.co/40" alt="User Profile" class="dropdown-avatar">
+                            <div class="dropdown-user-info">
+                                <p class="dropdown-username">John Lloyd Caban</p>
+                                <p class="dropdown-email">john.caban@example.com</p>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">👤</span>
+                            <span>Profile</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">⚙️</span>
+                            <span>Settings</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">🔔</span>
+                            <span>Notifications</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <span class="dropdown-icon">❓</span>
+                            <span>Help & Support</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-logout">
+                            <span class="dropdown-icon">🚪</span>
+                            <span>Log out</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <!-- Header Section -->
+            <section class="dashboard-header-section">
+                <h1 class="dashboard-title">Data Prove</h1>
+                <div class="dashboard-actions">
+                    <button class="btn btn-primary">Make a new project</button>
+                    <button class="btn btn-secondary">Invite people</button>
+                </div>
+                <div class="dashboard-help-text">
+                    <strong>View templates</strong> · Press <kbd>Ctrl+J</kbd> anytime to jump
+                </div>
+            </section>
+
+            <!-- Sample Projects Section -->
+            <section class="projects-section">
+                <h2 class="section-title">SAMPLE PROJECTS</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-tag">Sample</div>
+                        <h3 class="project-name">Getting Started</h3>
+                        <p class="project-description">Quickly get up to speed with everything Basecamp</p>
+                        <div class="project-avatar">
+                            <div class="avatar-circle">👤</div>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-tag">Sample</div>
+                        <h3 class="project-name">Making a Podcast</h3>
+                        <p class="project-description">🎙️ This is a sample project to showcase how we use Basecamp to make a podcast called REWORK. Take a look...</p>
+                        <div class="project-avatars">
+                            <div class="avatar-stack">
+                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
+                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
+                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
+                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
+                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Schedule and Assignments Section -->
+            <section class="dashboard-grid">
+                <!-- Schedule Section -->
+                <div class="schedule-section">
+                    <h2 class="section-title">YOUR SCHEDULE</h2>
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <button class="calendar-nav">&lt;</button>
+                            <h3 class="calendar-month">February</h3>
+                            <button class="calendar-nav">&gt;</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div class="weekday">SUN</div>
+                            <div class="weekday">MON</div>
+                            <div class="weekday">TUE</div>
+                            <div class="weekday">WED</div>
+                            <div class="weekday">THU</div>
+                            <div class="weekday">FRI</div>
+                            <div class="weekday">SAT</div>
+                        </div>
+                        <div class="calendar-days">
+                            <div class="day">1</div>
+                            <div class="day">2</div>
+                            <div class="day">3</div>
+                            <div class="day">4</div>
+                            <div class="day">5</div>
+                            <div class="day">6</div>
+                            <div class="day">7</div>
+                            <div class="day">8</div>
+                            <div class="day">9</div>
+                            <div class="day">10</div>
+                            <div class="day">11</div>
+                            <div class="day">12</div>
+                            <div class="day">13</div>
+                            <div class="day">14</div>
+                            <div class="day">15</div>
+                            <div class="day">16</div>
+                            <div class="day">17</div>
+                            <div class="day">18</div>
+                            <div class="day today">19</div>
+                            <div class="day">20</div>
+                            <div class="day">21</div>
+                            <div class="day">22</div>
+                            <div class="day">23</div>
+                            <div class="day">24</div>
+                            <div class="day">25</div>
+                            <div class="day">26</div>
+                            <div class="day">27</div>
+                            <div class="day">28</div>
+                        </div>
+                    </div>
+                    <div class="calendar-event">
+                        <span class="event-date">THU, FEB 19</span>
+                        <span class="event-text">Nothing's on the schedule</span>
+                    </div>
+                </div>
+
+                <!-- Assignments Section -->
+                <div class="assignments-section">
+                    <h2 class="section-title">YOUR ASSIGNMENTS</h2>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✓</div>
+                        <p class="empty-state-title">You don't have any assignments right now. To dos and cards assigned to you will show up here.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer Banner -->
+    <footer class="dashboard-footer">
+        <p>Upgrade today for ⚡ Unlimited projects · Tons of storage · No user limits · <a href="#">See your options</a></p>
+    </footer>
+
+    <!-- Modals -->
+    <!-- Make a New Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content modal-wide">
+            <span class="modal-close">&times;</span>
+            <h2>Make a new project</h2>
+            <form class="modal-form project-setup-form" id="projectForm">
+                
+                <!-- Step 1: Start with the basics -->
+                <section class="setup-step">
+                    <div class="step-header">
+                        <span class="step-number">1</span>
+                        <h3>Start with the basics</h3>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="projectName">Name this project</label>
+                        <input type="text" id="projectName" placeholder="e.g Office Renovation" title="Project name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectDesc">Add a description <span class="optional">(optional)</span></label>
+                        <textarea id="projectDesc" placeholder="e.g Plans and scheduling for expanding the office" title="Project description" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scheduleLink">Set the schedule <span class="optional">(optional)</span></label>
+                        <a href="#" id="scheduleLink" class="schedule-link" role="button" tabindex="0">Add start/end dates</a>
+                    </div>
+                </section>
+
+                <!-- Step 2: Choose your tools -->
+                <section class="setup-step">
+                    <div class="step-header">
+                        <span class="step-number">2</span>
+                        <h3>Choose your tools</h3>
+                        <p class="step-subtitle">You can always change tools later.</p>
+                    </div>
+                    
+                    <div class="tools-grid">
+                        <!-- Tool 1: Message Board -->
+                        <div class="tool-card">
+                            <div class="tool-toggle">
+                                <label class="toggle-switch" for="tool-messageBoard" title="Toggle Message Board tool">
+                                    <input type="checkbox" id="tool-messageBoard" class="tool-checkbox" checked aria-label="Message Board">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="tool-status">ON</span>
+                            </div>
+                            <h4>Message Board</h4>
+                            <p>Post announcements, pitch ideas, progress updates, etc. and keep conversations out of the inbox.</p>
+                        </div>
+
+                        <!-- Tool 2: To-dos -->
+                        <div class="tool-card">
+                            <div class="tool-toggle">
+                                <label class="toggle-switch" for="tool-todos" title="Toggle To-dos tool">
+                                    <input type="checkbox" id="tool-todos" class="tool-checkbox" checked aria-label="To-dos">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="tool-status">ON</span>
+                            </div>
+                            <h4>To-dos</h4>
+                            <p>Make lists of work that needs to get done, assign it, set due dates, and stay on top of it all.</p>
+                        </div>
+
+                        <!-- Tool 3: Docs & Files -->
+                        <div class="tool-card">
+                            <div class="tool-toggle">
+                                <label class="toggle-switch" for="tool-docs" title="Toggle Docs & Files tool">
+                                    <input type="checkbox" id="tool-docs" class="tool-checkbox" checked aria-label="Docs & Files">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="tool-status">ON</span>
+                            </div>
+                            <h4>Docs & Files</h4>
+                            <p>Share docs, files, images, and spreadsheets. Organize in folders to keep everything tidy and easy to find.</p>
+                        </div>
+
+                        <!-- Tool 4: Chat -->
+                        <div class="tool-card">
+                            <div class="tool-toggle">
+                                <label class="toggle-switch" for="tool-chat" title="Toggle Chat tool">
+                                    <input type="checkbox" id="tool-chat" class="tool-checkbox" checked aria-label="Chat">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="tool-status">ON</span>
+                            </div>
+                            <h4>Chat</h4>
+                            <p>Chat casually with the group, ask random questions, share photos, small talk without ceremony.</p>
+                        </div>
+
+                        <!-- Tool 5: Schedule -->
+                        <div class="tool-card">
+                            <div class="tool-toggle">
+                                <label class="toggle-switch" for="tool-schedule" title="Toggle Schedule tool">
+                                    <input type="checkbox" id="tool-schedule" class="tool-checkbox" checked aria-label="Schedule">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="tool-status">ON</span>
+                            </div>
+                            <h4>Schedule</h4>
+                            <p>Set important dates on a shared schedule. Syncs with Google Cal, iCal, or Outlook.</p>
+                        </div>
+
+                        <!-- Tool 6: Card Table -->
+                        <div class="tool-card">
+                            <div class="tool-toggle">
+                                <label class="toggle-switch" for="tool-cardtable" title="Toggle Card Table tool">
+                                    <input type="checkbox" id="tool-cardtable" class="tool-checkbox" aria-label="Card Table">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="tool-status">OFF</span>
+                            </div>
+                            <h4>Card Table</h4>
+                            <p>A visual, Kanban-like tool for process-oriented work. Drag and drop cards across columns.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 3: Choose who's on the project -->
+                <section class="setup-step">
+                    <div class="step-header">
+                        <span class="step-number">3</span>
+                        <h3>Choose who's on the project</h3>
+                    </div>
+                    
+                    <div class="project-access-options">
+                        <!-- Option 1: Invite-only -->
+                        <label class="access-option">
+                            <input type="radio" name="projectAccess" value="invite-only" checked class="access-radio">
+                            <div class="radio-circle"></div>
+                            <div class="option-text">
+                                <strong>Invite-only</strong>
+                                <p>Only people you invite can see this project</p>
+                            </div>
+                        </label>
+
+                        <!-- Option 2: All-access -->
+                        <label class="access-option">
+                            <input type="radio" name="projectAccess" value="all-access" class="access-radio">
+                            <div class="radio-circle"></div>
+                            <div class="option-text">
+                                <strong>All-access</strong>
+                                <p>In addition to the people you invite:</p>
+                                <div class="sub-options">
+                                    <label class="sub-option">
+                                        <input type="radio" name="allAccessType" value="data-prove" class="sub-radio">
+                                        <span>Anyone from Data Prove can see this project</span>
+                                    </label>
+                                    <label class="sub-option">
+                                        <input type="radio" name="allAccessType" value="account" class="sub-radio">
+                                        <span>Anyone on the account (except clients) can see this project</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="project-team-info">
+                        <p>You're the only team member in this account, so the project will just include you for now. Before adding people to a project, first <a href="#" class="add-link">invite them to your account</a>. You can do that after you create the project or right now if you like!</p>
+                    </div>
+                </section>
+            </form>
+            
+            <!-- Submit Button -->
+            <div class="form-actions">
+                <button type="submit" form="projectForm" class="btn btn-primary btn-large">Create this project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invite People Modal -->
+    <div id="inviteModal" class="modal">
+        <div class="modal-content modal-wide invite-modal">
+            <span class="modal-close">&times;</span>
+            <h2 id="inviteStepTitle">Who are you inviting?</h2>
+            
+            <form class="modal-form invite-form" id="inviteForm">
+                <!-- Step 1: Who are you inviting? -->
+                <section class="invite-step invite-step-1 active">
+                    <p class="invite-subtitle">First you'll invite them to the account. Then you can add them to projects.</p>
+                    
+                    <div class="invite-options">
+                        <!-- Option 1: Coworker -->
+                        <label class="invite-option">
+                            <input type="radio" name="inviteType" value="coworker" checked class="invite-radio">
+                            <div class="radio-circle"></div>
+                            <div class="option-content">
+                                <h3>Someone who works at Data Prove</h3>
+                                <p>People who work at Data Prove are <strong>the only people who can</strong> create projects, add others to projects, and act as administrators. Add them this way if they are full-time, part-time, or a volunteer at Data Prove.</p>
+                            </div>
+                        </label>
+
+                        <!-- Option 2: Contractor -->
+                        <label class="invite-option">
+                            <input type="radio" name="inviteType" value="contractor" class="invite-radio">
+                            <div class="radio-circle"></div>
+                            <div class="option-content">
+                                <h3>An outside collaborator, partner, contractor, guest, etc.</h3>
+                                <p>This person doesn't work at Data Prove. They can collaborate on projects with you, but <strong>they won't</strong> be able to create projects, invite people to the account, add people to projects, or be admins.</p>
+                            </div>
+                        </label>
+
+                        <!-- Option 3: Client -->
+                        <label class="invite-option">
+                            <input type="radio" name="inviteType" value="client" class="invite-radio">
+                            <div class="radio-circle"></div>
+                            <div class="option-content">
+                                <h3>A client you're doing work for</h3>
+                                <p>Clients can access projects you've created, but <strong>they can't</strong> create their own, invite or add new people, or become admins. You can hide parts of projects from them so they can't see work in progress.</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="invite-actions">
+                        <button type="button" class="btn btn-primary btn-large invite-next-btn">Next, enter their name...</button>
+                    </div>
+                </section>
+
+                <!-- Step 2: Enter Details -->
+                <section class="invite-step invite-step-2">
+                    <button type="button" class="invite-back-btn">← Back</button>
+                    
+                    <p class="invite-description" id="inviteDescription">People who work at Data Prove are the only people who can create projects, add others to projects, and act as administrators. They can be full-time, part-time, or a volunteer.</p>
+
+                    <div class="invite-fields-container">
+                        <!-- Invite entry template -->
+                        <div class="invite-entry">
+                            <div class="form-row">
+                                <div class="form-group form-col">
+                                    <label for="fullname-0">Full name</label>
+                                    <input type="text" id="fullname-0" placeholder="Full name" class="invite-fullname" title="Full name" required>
+                                </div>
+                                <div class="form-group form-col">
+                                    <label for="email-0">Email address</label>
+                                    <input type="email" id="email-0" placeholder="Email address" class="invite-email" title="Email address" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group form-col">
+                                    <label for="jobtitle-0">Job title (optional)</label>
+                                    <input type="text" id="jobtitle-0" placeholder="Job title (optional)" class="invite-jobtitle" title="Job title">
+                                </div>
+                                <div class="form-group form-col">
+                                    <label for="inviteCompany">Company/organization</label>
+                                    <input type="text" id="inviteCompany" placeholder="Company/organization" class="invite-company" title="Company or organization">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="add-more-btn" id="addMoreBtn">
+                        <span class="plus-icon">+</span>
+                    </button>
+
+                    <div class="invite-note-section">
+                        <a href="#" class="add-note-link">Add a personal note to the invitation email</a>
+                    </div>
+                </section>
+            </form>
+            
+            <!-- Submit Button -->
+            <div class="invite-actions form-actions">
+                <button type="submit" form="inviteForm" class="btn btn-primary btn-large">Email invitation now...</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Detail Modal -->
+    <div id="projectDetailModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="projectDetailContent">
+                <!-- Dynamically filled -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Board Modal -->
+    <div id="messageBoardModal" class="modal">
+        <div class="modal-content modal-tool">
+            <span class="modal-close">&times;</span>
+            <div class="tool-modal-header">
+                <h2>Message Board</h2>
+                <button class="btn btn-primary btn-small">+ New message</button>
+            </div>
+            
+            <div class="tool-modal-body">
+                <div class="empty-state">
+                    <div class="empty-state-icon">💬</div>
+                    <h3>No messages just yet</h3>
+                    <p>Post announcements, pitch ideas, and gather feedback while keeping discussions on-topic.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- To-dos Modal -->
+    <div id="todosModal" class="modal">
+        <div class="modal-content modal-tool">
+            <span class="modal-close">&times;</span>
+            <div class="tool-modal-header">
+                <h2>To-dos</h2>
+                <button class="btn btn-primary btn-small">+ New list</button>
+            </div>
+            
+            <div class="tool-modal-body">
+                <div class="empty-state">
+                    <div class="empty-state-icon">✓</div>
+                    <h3>No to-do lists just yet</h3>
+                    <p>Organize work across teams to get things done on time. Assign tasks, set due dates, and discuss.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Docs & Files Modal -->
+    <div id="docsFilesModal" class="modal">
+        <div class="modal-content modal-tool">
+            <span class="modal-close">&times;</span>
+            <div class="tool-modal-header">
+                <h2>Docs & Files</h2>
+                <button class="btn btn-primary btn-small">+ New...</button>
+            </div>
+            
+            <div class="tool-modal-body">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📄</div>
+                    <h3>No files just yet</h3>
+                    <p>A centralized place to share docs, spreadsheets, images, and other files. Organize in folders, share assets with contractors, and keep tabs on file versions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="modal">
+        <div class="modal-content modal-tool modal-large">
+            <span class="modal-close">&times;</span>
+            <h2>Chat</h2>
+            
+            <div class="chat-container">
+                <div class="chat-messages">
+                    <div class="chat-empty">
+                        <div class="chat-empty-icon">💬</div>
+                        <p class="chat-empty-text">Chat casually in here. Ask questions, connect with your team, and share news without ceremony.</p>
+                        <p class="chat-prompt">Start by saying "Hi!" to your team.</p>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" placeholder="Type a message..." title="Chat message">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Modal -->
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content modal-tool modal-large">
+            <span class="modal-close">&times;</span>
+            <div class="tool-modal-header">
+                <h2>Schedule</h2>
+                <button class="btn btn-primary btn-small">+ New event</button>
+            </div>
+            
+            <div class="tool-modal-body">
+                <div class="schedule-content">
+                    <div class="calendar-large">
+                        <div class="calendar-header">
+                            <button class="calendar-nav">&lt;</button>
+                            <h3 class="calendar-month">February</h3>
+                            <button class="calendar-nav">&gt;</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div class="weekday">SUN</div>
+                            <div class="weekday">MON</div>
+                            <div class="weekday">TUE</div>
+                            <div class="weekday">WED</div>
+                            <div class="weekday">THU</div>
+                            <div class="weekday">FRI</div>
+                            <div class="weekday">SAT</div>
+                        </div>
+                        <div class="calendar-days">
+                            <div class="day">1</div>
+                            <div class="day">2</div>
+                            <div class="day">3</div>
+                            <div class="day">4</div>
+                            <div class="day">5</div>
+                            <div class="day">6</div>
+                            <div class="day">7</div>
+                            <div class="day">8</div>
+                            <div class="day">9</div>
+                            <div class="day">10</div>
+                            <div class="day">11</div>
+                            <div class="day">12</div>
+                            <div class="day">13</div>
+                            <div class="day">14</div>
+                            <div class="day">15</div>
+                            <div class="day">16</div>
+                            <div class="day">17</div>
+                            <div class="day">18</div>
+                            <div class="day">19</div>
+                            <div class="day today">20</div>
+                            <div class="day">21</div>
+                            <div class="day">22</div>
+                            <div class="day">23</div>
+                            <div class="day">24</div>
+                            <div class="day">25</div>
+                            <div class="day">26</div>
+                            <div class="day">27</div>
+                            <div class="day">28</div>
+                        </div>
+                    </div>
+                    <div class="schedule-sidebar">
+                        <div class="schedule-event-date">FRI, FEB 20</div>
+                        <div class="schedule-event-text">Nothing's on the schedule</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Table Modal -->
+    <div id="cardTableModal" class="modal">
+        <div class="modal-content modal-tool modal-large">
+            <span class="modal-close">&times;</span>
+            <div class="tool-modal-header">
+                <h2>Card Table</h2>
+                <button class="btn btn-primary btn-small">+ Add a card</button>
+            </div>
+            
+            <div class="tool-modal-body card-table-body">
+                <div class="kanban-board">
+                    <div class="kanban-column">
+                        <div class="column-header">
+                            <h3>Triage</h3>
+                            <span class="column-count">(0)</span>
+                        </div>
+                        <div class="column-cards">
+                            <div class="empty-column-state">No cards just yet. When you add the first card, it will start in this column.</div>
+                        </div>
+                    </div>
+                    <div class="kanban-column">
+                        <div class="column-header">
+                            <h3>Figuring it out</h3>
+                            <span class="column-count">(0)</span>
+                        </div>
+                        <div class="column-cards"></div>
+                    </div>
+                    <div class="kanban-column">
+                        <div class="column-header">
+                            <h3>In progress</h3>
+                            <span class="column-count">(0)</span>
+                        </div>
+                        <div class="column-cards"></div>
+                    </div>
+                    <div class="kanban-column">
+                        <div class="column-header">
+                            <h3>Done</h3>
+                            <span class="column-count">(0)</span>
+                        </div>
+                        <div class="column-cards"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+    <script src="./js/dashboard.js"></script>
+</body>
+</html>
