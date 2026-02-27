@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "buildCommand": "npm install",
   "installCommand": "npm ci",
   "functions": {
@@ -56,11 +57,19 @@
       ]
     },
     {
+=======
+  "headers": [
+    {
+>>>>>>> bbbd825ff4917fd00d4a82bb7c0885865e8ac764
       "source": "/(.*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
+<<<<<<< HEAD
           "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; media-src 'self'; child-src 'none'; base-uri 'self';"
+=======
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; media-src 'self'; child-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;"
+>>>>>>> bbbd825ff4917fd00d4a82bb7c0885865e8ac764
         },
         {
           "key": "Strict-Transport-Security",
@@ -84,11 +93,23 @@
         },
         {
           "key": "Permissions-Policy",
+<<<<<<< HEAD
           "value": "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
         },
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
+=======
+          "value": "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, max-age=0"
+        },
+        {
+          "key": "Pragma",
+          "value": "no-cache"
+>>>>>>> bbbd825ff4917fd00d4a82bb7c0885865e8ac764
         }
       ]
     }
