@@ -24,6 +24,7 @@
                             id="fullname" 
                             name="fullname" 
                             placeholder="John Doe" 
+                            autocomplete="username"
                             required
                         >
                     </div>
@@ -48,23 +49,38 @@
                             id="organization" 
                             name="organization" 
                             placeholder="Acme Corporation" 
+                            autocomplete="organization"
                             required
                         >
                     </div>
 
-                    <!-- Terms Agreement -->
-                    <div class="form-group checkbox">
+                    <!-- Password (Hidden Initially) -->
+                    <div class="form-group" id="passwordSection" style="display: none;">
+                        <label for="password">Set a password</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="At least 8 characters"
+                            autocomplete="new-password"
+                        >
+                        <small style="color: #666; margin-top: 5px; display: block;">
+                            Must contain: uppercase, lowercase, number, and special character (@, $, !, %, *, ?)
+                        </small>
+                    </div>
+
+                    <!-- Terms Agreement (Hidden Initially) -->
+                    <div class="form-group checkbox" id="termsSection" style="display: none;">
                         <input 
                             type="checkbox" 
                             id="terms" 
-                            name="terms" 
-                            required
+                            name="terms"
                         >
                         <label for="terms">I agree to DataCamp <a href="#" class="link">Terms</a> and <a href="#" class="link">Privacy Policy</a>.</label>
                     </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit" class="cta-btn primary auth-submit">Last step: set a password →</button>
+                    <!-- Password Toggle Button (Step 1) / Submit Button (Step 2) -->
+                    <button type="button" class="cta-btn primary auth-submit" id="signupToggleBtn">Last step: set a password →</button>
                 </form>
 
                 <!-- Support Link -->
@@ -82,6 +98,7 @@
     </section>
 
     <script src="./js/script.js"></script>
+    <script src="./js/input-validator.js"></script>
     <script src="./js/auth.js"></script>
 </body>
 </html>
