@@ -15,8 +15,8 @@
 //    SecurityHeaders::init();   // starts session + sends all headers
 //
 //  Then in your HTML template:
-//    <script nonce="<?= SecurityHeaders::nonce() ?>">
-//        // this inline script is now whitelisted by CSP nonce
+//    <script nonce="{ SecurityHeaders::nonce() }">
+//        (use <?= and close with the PHP closing tag in actual code)
 //    </script>
 //
 //  ⚠  This file is blocked from direct browser access by php/.htaccess.

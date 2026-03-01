@@ -199,7 +199,13 @@
 
 
 # ─── PHP Session & Runtime Hardening ──────────────────────────────────────────
+# XAMPP PHP 8 uses mod_php8 (or php8_module). Cover all common names.
 <IfModule mod_php.c>
+    php_flag  display_errors          Off
+    php_flag  display_startup_errors  Off
+    php_flag  log_errors              On
+</IfModule>
+<IfModule mod_php8.c>
 
     # Hide PHP version from response headers (X-Powered-By)
     php_flag  expose_php             Off
@@ -281,5 +287,13 @@ Options -Indexes
     # ── Block suspicious user-agents (scanners / exploit kits) ───────────────
     RewriteCond %{HTTP_USER_AGENT} (nikto|sqlmap|nmap|masscan|zgrab|python-requests.*scan) [NC]
     RewriteRule .* - [F,L]
+
+    # ── Clean API URL routing ─────────────────────────────────────────────────
+    # Maps /DataCamp/api/<path> → /DataCamp/php/api/<path>.php
+    # so client code can call /DataCamp/api/auth/signin instead of the .php path.
+    # The php/api/.htaccess grants access; php/.htaccess stays locked.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^api/(.+)$ php/api/$1.php [L,QSA]
 
 </IfModule>

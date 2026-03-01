@@ -1,0 +1,29 @@
+# =============================================================================
+#  DATACAMP — php/api/ ACCESS POLICY
+#
+#  This directory OVERRIDES the parent php/.htaccess <FilesMatch> deny so
+#  that API endpoint PHP files can be reached over HTTP.
+#
+#  Only .php files are served; helpers and non-PHP files are still blocked.
+#  All inputs are validated at the PHP layer (InputSanitizer.php).
+# =============================================================================
+
+# Override the parent directory deny — API PHP files must be reachable
+<FilesMatch "\.php$">
+    Require all granted
+</FilesMatch>
+
+# Deny everything that is NOT a PHP file (sql, txt, etc.)
+<FilesMatch "^(?!.*\.php$).*$">
+    Require all denied
+</FilesMatch>
+
+# Remove PHP version fingerprint from API responses
+<IfModule mod_headers.c>
+    Header always unset X-Powered-By
+    Header always unset Server
+</IfModule>
+
+# Disable directory listing for API paths
+Options -Indexes
+

@@ -21,7 +21,7 @@ define('APP_URL',     'http://localhost/DataCamp');   // no trailing slash
 // In production, load these from environment variables or a secrets manager —
 // never keep real credentials in source control.
 define('DB_HOST',    getenv('DB_HOST')    ?: 'localhost');
-define('DB_PORT',    getenv('DB_PORT')    ?: '3306');
+define('DB_PORT',    getenv('DB_PORT')    ?: '4306');
 define('DB_NAME',    getenv('DB_NAME')    ?: 'datacamp');
 define('DB_USER',    getenv('DB_USER')    ?: 'root');
 define('DB_PASS',    getenv('DB_PASS')    ?: '');
@@ -56,20 +56,19 @@ define('CORS_ALLOWED_ORIGINS', [
 // SecurityHeaders::init() generates a per-request nonce so that trusted
 // inline <script> blocks can be whitelisted without 'unsafe-inline'.
 // Usage in a PHP template:
-//   <script nonce="<?= SecurityHeaders::nonce() ?>"> ... </script>
+//   <script nonce="{ SecurityHeaders::nonce() }"> ... </script>
+// (use <?= and close with the PHP closing tag in actual code)
 // SecurityHeaders::init() must be called BEFORE any output.
 
 // ── Error Reporting ───────────────────────────────────────────────────────────
-if (APP_ENV === 'production') {
-    ini_set('display_errors',         '0');
-    ini_set('display_startup_errors', '0');
-    ini_set('log_errors',             '1');
-    error_reporting(E_ALL);
-} else {
-    ini_set('display_errors',         '1');
-    ini_set('display_startup_errors', '1');
-    error_reporting(E_ALL);
-}
+// NEVER display errors to the browser - they corrupt JSON API responses and
+// expose internal details. Always log instead. This applies in all environments.
+ini_set('display_errors',         '0');
+ini_set('display_startup_errors', '0');
+ini_set('log_errors',             '1');
+error_reporting(E_ALL);
+// To debug PHP locally, check XAMPP's Apache error log:
+//   c:\xampp\apache\logs\error.log
 
 // ── Session Bootstrap ─────────────────────────────────────────────────────────
 // Called automatically by SecurityHeaders::init() — do not call session_start()

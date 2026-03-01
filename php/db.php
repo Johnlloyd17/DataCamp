@@ -163,6 +163,101 @@ class DB
     }
 
     // =========================================================================
+    //  STORED PROCEDURE SUPPORT
+    //  OWASP hardening: use SP calls so the app user needs only EXECUTE,
+    //  not direct SELECT/INSERT/UPDATE/DELETE on tables.
+    //  All parameters are still bound via PDO — NEVER concatenated.
+    // =========================================================================
+
+    /**
+     * Call a stored procedure and return all result rows.
+     *
+     * @param  string  $procedure  Procedure name (validated — alphanumeric + underscore only)
+     * @param  array   $inParams   IN parameters passed as positional ? placeholders
+     * @return array<int, array<string, mixed>>
+     *
+     * @throws InvalidArgumentException  if procedure name contains invalid characters
+     *
+     * @example
+     *   $rows = DB::callProc('sp_get_user_by_email', [$email]);
+     */
+    public static function callProc(string $procedure, array $inParams = []): array
+    {
+        self::assertSafeProcName($procedure);
+
+        $placeholders = self::buildPlaceholders(count($inParams));
+        $sql          = "CALL {$procedure}({$placeholders})";
+
+        $stmt = self::connect()->prepare($sql);
+        $stmt->execute(array_values($inParams));
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Call a stored procedure and return only the first result row (or null).
+     *
+     * @param  string  $procedure
+     * @param  array   $inParams
+     * @return array<string, mixed>|null
+     */
+    public static function callProcOne(string $procedure, array $inParams = []): ?array
+    {
+        $rows = self::callProc($procedure, $inParams);
+        return $rows[0] ?? null;
+    }
+
+    /**
+     * Call a stored procedure that uses OUT/INOUT parameters.
+     * OUT parameters are read back via session variables.
+     *
+     * @param  string    $procedure  Stored procedure name
+     * @param  array     $inParams   IN parameter values (positional)
+     * @param  string[]  $outNames   Names for the OUT parameters (used as session var names)
+     * @return array<string, mixed>  Map of outName => value
+     *
+     * @example
+     *   $out = DB::callProcWithOut('sp_create_user',
+     *              [$fullName, $email, $org, $hash],
+     *              ['p_new_id', 'p_status']);
+     *   $newId  = $out['p_new_id'];
+     *   $status = $out['p_status'];
+     */
+    public static function callProcWithOut(
+        string $procedure,
+        array  $inParams,
+        array  $outNames
+    ): array {
+        self::assertSafeProcName($procedure);
+
+        $pdo = self::connect();
+
+        // Build @out variable references
+        $outVars    = array_map(fn(string $n) => '@' . $n, $outNames);
+        $inHolders  = self::buildPlaceholders(count($inParams));
+        $outHolders = implode(', ', $outVars);
+
+        $allHolders = trim($inHolders . ($inHolders && $outHolders ? ', ' : '') . $outHolders, ', ');
+
+        // Call the procedure
+        $callSql  = "CALL {$procedure}({$allHolders})";
+        $callStmt = $pdo->prepare($callSql);
+        $callStmt->execute(array_values($inParams));
+        $callStmt->closeCursor();
+
+        // Read back OUT parameter values
+        $selectSql  = 'SELECT ' . implode(', ', $outVars);
+        $selectStmt = $pdo->query($selectSql);
+        $row        = $selectStmt->fetch() ?: [];
+
+        // Re-key by original outNames (strip leading @)
+        $result = [];
+        foreach ($outNames as $name) {
+            $result[$name] = $row['@' . $name] ?? null;
+        }
+        return $result;
+    }
+
+    // =========================================================================
     //  SECURITY HELPERS
     // =========================================================================
 
@@ -195,5 +290,44 @@ class DB
 
         $needsRehash = password_needs_rehash($hash, PASSWORD_ALGO, ['cost' => PASSWORD_COST]);
         return true;
+    }
+
+    // =========================================================================
+    //  PRIVATE HELPERS
+    // =========================================================================
+
+    /**
+     * Validate a stored-procedure name to prevent SQL injection via the
+     * procedure name itself (which cannot be bound as a PDO parameter).
+     * Only alphanumeric characters and underscores are allowed.
+     *
+     * OWASP note: even though we use parameterized queries for values,
+     * object names (tables, columns, procedure names) cannot be bound —
+     * so we whitelist them explicitly.
+     *
+     * @throws InvalidArgumentException
+     */
+    private static function assertSafeProcName(string $name): void
+    {
+        if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]{0,63}$/', $name)) {
+            throw new InvalidArgumentException(
+                "Invalid stored procedure name: '{$name}'. "
+                . "Only alphanumeric characters and underscores are allowed."
+            );
+        }
+    }
+
+    /**
+     * Build a comma-separated list of ? placeholders for positional binding.
+     *
+     * @param  int     $count  Number of placeholders
+     * @return string          e.g. "?, ?, ?"
+     */
+    private static function buildPlaceholders(int $count): string
+    {
+        if ($count === 0) {
+            return '';
+        }
+        return implode(', ', array_fill(0, $count, '?'));
     }
 }

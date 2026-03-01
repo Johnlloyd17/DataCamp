@@ -12,7 +12,7 @@
   // Fetch logs from server
   async function fetchLogs() {
     try {
-      const response = await fetch('/api/logs');
+      const response = await fetch('./php/api/logs.php');
       
       // If API doesn't exist (Vercel, static hosting), silently return
       if (!response.ok) {

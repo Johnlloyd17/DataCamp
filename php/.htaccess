@@ -8,9 +8,17 @@
 #    http://localhost/DataCamp/php/config.php
 #    http://localhost/DataCamp/php/db.php
 #    http://localhost/DataCamp/php/security-headers.php
+#    http://localhost/DataCamp/php/InputSanitizer.php
+#    http://localhost/DataCamp/php/RateLimiter.php
 #  receives a 403 Forbidden instead of having sensitive code / credentials
 #  exposed or executed in isolation.
+#
+#  EXCEPTION: php/api/ is a publicly-accessible sub-directory that hosts
+#  REST API endpoints. It has its own .htaccess granting access.
 # =============================================================================
 
-# Deny all HTTP access to every file in this directory
-Require all denied
+# Block direct access to all files in THIS directory
+# (php/api/ sub-directory has its own .htaccess that overrides this)
+<FilesMatch "\.php$">
+    Require all denied
+</FilesMatch>

@@ -2,6 +2,29 @@
 // DATACAMP AUTH PAGES - FORM HANDLING
 // ==========================================
 
+// ── OWASP: Fetch CSRF token once on page load ─────────────────────────────
+// The synchronizer-token is issued by php/api/csrf-token.php and stored
+// in the session. Every mutating request (POST) must include it as the
+// X-CSRF-Token header; the backend validates it via SecurityHeaders::validateCsrf().
+let _csrfToken = null;
+
+async function getCsrfToken() {
+  if (_csrfToken) return _csrfToken;
+  try {
+    const res  = await fetch('./php/api/csrf-token.php');
+    const data = await res.json();
+    if (data.success && data.token) {
+      _csrfToken = data.token;
+    }
+  } catch (e) {
+    console.warn('Could not fetch CSRF token — running without backend:', e.message);
+  }
+  return _csrfToken;
+}
+
+// Pre-fetch token as soon as the script loads
+getCsrfToken();
+
 // Sign In Form Handling - Multi-step process
 const signinForm = document.getElementById('signinForm');
 const nextBtn = document.getElementById('nextBtn');
@@ -140,7 +163,7 @@ if (signupToggleBtn) {
             const sanitizedData = {
               fullname: fullname.trim(),
               email: email.trim().toLowerCase(),
-              organization: organization.trim(),
+              organisation: organization.trim(),   // PHP expects 'organisation'
               password: password
             };
             
@@ -154,19 +177,24 @@ if (signupToggleBtn) {
     });
 }
 
-// Helper function for sign in (calls API)
-function signInUser(credentials) {
+// Helper function for sign in (calls PHP API)
+async function signInUser(credentials) {
   console.log('Attempting to sign in user...');
-  
-  fetch('/api/auth/signin', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(credentials)
-  })
-  .then(response => response.json())
-  .then(data => {
+
+  // OWASP: attach CSRF token so the backend can validate the request origin
+  const csrf = await getCsrfToken();
+
+  const headers = { 'Content-Type': 'application/json' };
+  if (csrf) headers['X-CSRF-Token'] = csrf;
+
+  try {
+    const response = await fetch('./php/api/auth/signin.php', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(credentials)
+    });
+    const data = await response.json();
+
     if (data.success) {
       console.log('✓ Sign in successful:', data.user);
       logMessage('Sign in successful');
@@ -176,14 +204,15 @@ function signInUser(credentials) {
       showSigninError('Sign in failed: ' + (data.errors?.[0] || 'Invalid email or password'));
       nextBtn.textContent = 'Sign In';
       nextBtn.disabled = false;
+      // Rotate CSRF token after each failed attempt
+      _csrfToken = null;
     }
-  })
-  .catch(error => {
+  } catch (error) {
     console.error('✗ API Error:', error);
     showSigninError('Connection error: ' + error.message);
     nextBtn.textContent = 'Sign In';
     nextBtn.disabled = false;
-  });
+  }
 }
 
 // Show sign in success message to user
@@ -251,20 +280,24 @@ function showSigninError(message) {
   }
 }
 
-// Helper function for sign up (calls API)
-function signUpUser(credentials) {
+// Helper function for sign up (calls PHP API)
+async function signUpUser(credentials) {
   console.log('Creating user account (sanitized input)...');
-  
-  // Call the signup API with sanitized data
-  fetch('/api/auth/signup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(credentials)
-  })
-  .then(response => response.json())
-  .then(data => {
+
+  // OWASP: attach CSRF token
+  const csrf = await getCsrfToken();
+
+  const headers = { 'Content-Type': 'application/json' };
+  if (csrf) headers['X-CSRF-Token'] = csrf;
+
+  try {
+    const response = await fetch('./php/api/auth/signup.php', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(credentials)
+    });
+    const data = await response.json();
+
     if (data.success) {
       console.log('✓ Account created successfully:', data.user);
       logMessage('Account creation successful');
@@ -274,14 +307,15 @@ function signUpUser(credentials) {
       showSignupError('Account creation failed: ' + (data.errors?.[0] || 'Unknown error'));
       signupToggleBtn.textContent = 'Complete signup →';
       signupToggleBtn.disabled = false;
+      // Rotate CSRF token after each failed attempt
+      _csrfToken = null;
     }
-  })
-  .catch(error => {
+  } catch (error) {
     console.error('✗ API Error:', error);
     showSignupError('Connection error: ' + error.message);
     signupToggleBtn.textContent = 'Complete signup →';
     signupToggleBtn.disabled = false;
-  });
+  }
 }
 
 // Log signup attempt
