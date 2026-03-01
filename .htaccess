@@ -1,0 +1,285 @@
+# =============================================================================
+#  DATACAMP — HTTP SECURE HEADERS & APACHE HARDENING
+#  Apache 2.4 (.htaccess)
+#
+#  Layers covered:
+#    1.  Content-Security-Policy (CSP)
+#    2.  HSTS  – Strict-Transport-Security
+#    3.  X-Content-Type-Options
+#    4.  X-Frame-Options  (legacy frame-ancestors fallback)
+#    5.  Referrer-Policy
+#    6.  Permissions-Policy
+#    7.  CORS  – Cross-Origin Resource Sharing
+#    8.  Cross-Origin isolation headers
+#    9.  Server fingerprint removal
+#   10.  Cache-Control per resource type
+#   11.  PHP session hardening
+#   12.  Directory / file access control
+#   13.  URL-level attack filtering
+# =============================================================================
+
+
+# ─── Require mod_headers ──────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+
+    # =========================================================================
+    # 1. CONTENT-SECURITY-POLICY (CSP)
+    # =========================================================================
+    # Tells the browser which origins are allowed for each resource type.
+    # Anything not listed is blocked — the first line of defence against XSS
+    # and data-injection attacks.
+    #
+    # Breakdown of each directive:
+    #  default-src 'self'            – fallback: only same-origin
+    #  script-src  'self'            – JS only from this server (no inline JS)
+    #  style-src   'self' 'unsafe-inline' – same-origin CSS + inline style="" attrs
+    #  img-src     'self' https://placehold.co data: blob:
+    #                                – local imgs + placehold.co avatar, data-URIs, blobs
+    #  font-src    'self'            – no external font CDNs
+    #  connect-src 'self'            – fetch / XHR only to same origin
+    #  media-src   'none'            – no <audio>/<video> embeds
+    #  object-src  'none'            – block <object>/<embed>/<applet> (Flash etc.)
+    #  frame-src   'none'            – no iframes
+    #  frame-ancestors 'none'        – prevent THIS page being iframed elsewhere
+    #  base-uri    'self'            – block <base> hijack attacks
+    #  form-action 'self'            – forms submit only to same origin
+    #  upgrade-insecure-requests     – auto-upgrade http:// sub-resources to https://
+    #
+    # NOTE: Remove 'unsafe-inline' from style-src once inline style="" attrs are
+    # moved to CSS classes — that tightens the policy further.
+    # =========================================================================
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https://placehold.co data: blob:; font-src 'self'; connect-src 'self'; media-src 'none'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
+
+
+    # =========================================================================
+    # 2. HSTS — STRICT-TRANSPORT-SECURITY
+    # =========================================================================
+    # Forces the browser to use HTTPS for every request to this domain.
+    # max-age=31536000   – enforce for 1 year
+    # includeSubDomains  – also applies to subdomains
+    # preload            – eligible for browser HSTS preload list
+    #
+    # ⚠  PRODUCTION ONLY — XAMPP localhost does not use valid SSL.
+    #    Uncomment the line below ONLY after you have a valid TLS certificate.
+    # =========================================================================
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+
+    # =========================================================================
+    # 3. X-CONTENT-TYPE-OPTIONS
+    # =========================================================================
+    # Prevents browsers from "MIME-sniffing" a response away from the declared
+    # Content-Type header. Stops e.g. a .txt file being executed as JavaScript.
+    # =========================================================================
+    Header always set X-Content-Type-Options "nosniff"
+
+
+    # =========================================================================
+    # 4. X-FRAME-OPTIONS (legacy)
+    # =========================================================================
+    # Older browsers that do not support CSP frame-ancestors still respect this.
+    # DENY = no site (including yourself) may embed this page in an <iframe>.
+    # =========================================================================
+    Header always set X-Frame-Options "DENY"
+
+
+    # =========================================================================
+    # 5. REFERRER-POLICY
+    # =========================================================================
+    # Controls how much of the URL is sent in the Referer header on navigation.
+    #
+    # strict-origin-when-cross-origin (recommended default):
+    #   – Same-origin requests: full URL sent
+    #   – Cross-origin, same protocol (https→https): only origin sent
+    #   – Cross-origin, downgrade (https→http): nothing sent
+    #
+    # Protects user privacy and prevents leaking sensitive URL parameters
+    # (e.g. token=... or reset=...) to third-party servers.
+    # =========================================================================
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+
+    # =========================================================================
+    # 6. PERMISSIONS-POLICY
+    # =========================================================================
+    # Opt-out of browser APIs that this app does not use.
+    # Reduces the damage radius if an XSS manages to run in this origin.
+    #   ()      = blocked for all origins (including self)
+    #   (self)  = allowed only for same-origin
+    # =========================================================================
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=(), ambient-light-sensor=(), autoplay=(), fullscreen=(self), picture-in-picture=(self)"
+
+
+    # =========================================================================
+    # 7. CORS — CROSS-ORIGIN RESOURCE SHARING
+    # =========================================================================
+    # By default browsers enforce the Same-Origin Policy — CORS lets you
+    # selectively relax it for specific trusted origins.
+    #
+    # These headers are intentionally COMMENTED OUT because this app serves
+    # only same-origin requests right now.
+    #
+    # When you build a public API or integrate a frontend on a different domain,
+    # uncomment and set the correct trusted origin:
+    #
+    #   Access-Control-Allow-Origin     – which origin(s) may call this API
+    #   Access-Control-Allow-Methods    – allowed HTTP verbs
+    #   Access-Control-Allow-Headers    – allowed request headers
+    #   Access-Control-Allow-Credentials – allow cookies/auth headers (true/false)
+    #   Access-Control-Max-Age          – preflight cache duration (seconds)
+    # =========================================================================
+    # Header always set Access-Control-Allow-Origin      "https://yourdomain.com"
+    # Header always set Access-Control-Allow-Methods     "GET, POST, PUT, DELETE, OPTIONS"
+    # Header always set Access-Control-Allow-Headers     "Content-Type, Authorization, X-Requested-With"
+    # Header always set Access-Control-Allow-Credentials "true"
+    # Header always set Access-Control-Max-Age           "86400"
+
+    # Handle CORS preflight OPTIONS requests
+    # <If "%{REQUEST_METHOD} == 'OPTIONS'">
+    #     Header always set Access-Control-Allow-Origin  "https://yourdomain.com"
+    #     Header always set Content-Length "0"
+    #     Header always set Content-Type  "text/plain"
+    # </If>
+
+
+    # =========================================================================
+    # 8. CROSS-ORIGIN ISOLATION HEADERS
+    # =========================================================================
+    # COOP prevents cross-origin windows from accessing each other's globals
+    # (e.g. stops pop-up windows opened by other origins from reading your DOM).
+    #
+    # CORP tells the browser this resource may only be loaded by same-origin.
+    #
+    # COEP is commented out — it requires every sub-resource to declare CORP
+    # or CORS explicitly, which would break placehold.co images right now.
+    # Enable it once all cross-origin resources opt-in.
+    # =========================================================================
+    Header always set Cross-Origin-Opener-Policy   "same-origin"
+    Header always set Cross-Origin-Resource-Policy "same-origin"
+    # Header always set Cross-Origin-Embedder-Policy "require-corp"
+
+
+    # =========================================================================
+    # 9. SERVER FINGERPRINT REMOVAL
+    # =========================================================================
+    # Remove headers that expose server technology / version info.
+    # Less info for attackers = smaller attack surface.
+    # =========================================================================
+    Header always unset X-Powered-By
+    Header always unset Server
+
+
+    # =========================================================================
+    # 10. CACHE-CONTROL PER RESOURCE TYPE
+    # =========================================================================
+
+    # Auth & dashboard pages — never cache, never store (contains user data)
+    <FilesMatch "^(signin|signup|dashboard|activity|pings|hey|lineup|my-stuff|find)\.html$">
+        Header always set Cache-Control "no-store, no-cache, must-revalidate, private, max-age=0"
+        Header always set Pragma        "no-cache"
+        Header always set Expires       "0"
+    </FilesMatch>
+
+    # PHP API / page responses — no caching by default
+    <FilesMatch "\.php$">
+        Header always set Cache-Control "no-store, private, max-age=0"
+    </FilesMatch>
+
+    # CSS & JS — cache 24 hours, allow stale while revalidating
+    <FilesMatch "\.(css|js)$">
+        Header always set Cache-Control "public, max-age=86400, stale-while-revalidate=3600"
+    </FilesMatch>
+
+    # Images & fonts — cache 7 days
+    <FilesMatch "\.(webp|avif|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+        Header always set Cache-Control "public, max-age=604800, immutable"
+    </FilesMatch>
+
+</IfModule>
+
+
+# ─── PHP Session & Runtime Hardening ──────────────────────────────────────────
+<IfModule mod_php.c>
+
+    # Hide PHP version from response headers (X-Powered-By)
+    php_flag  expose_php             Off
+
+    # ── Session cookie security ──────────────────────────────────────────────
+    # HttpOnly  – JS cannot read the session cookie (blocks cookie-stealing XSS)
+    php_value session.cookie_httponly  1
+
+    # SameSite=Strict – cookie not sent on cross-site requests (blocks CSRF)
+    php_value session.cookie_samesite  "Strict"
+
+    # Secure  – cookie only sent over HTTPS
+    # ⚠  Uncomment on production with HTTPS
+    # php_value session.cookie_secure  1
+
+    # Reject unrecognised session IDs (prevents session fixation)
+    php_value session.use_strict_mode  1
+
+    # Regenerate session ID on every request in strict mode
+    php_value session.use_only_cookies 1
+
+    # Session lifetime: 30 minutes of inactivity
+    php_value session.gc_maxlifetime   1800
+
+    # ── Input / Output ───────────────────────────────────────────────────────
+    # Log errors but NEVER display them to users
+    php_flag  display_errors          Off
+    php_flag  display_startup_errors  Off
+    php_flag  log_errors              On
+
+    # Disable dangerous PHP functions
+    php_value disable_functions "exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source"
+
+</IfModule>
+
+
+# ─── Directory & File Access Control ──────────────────────────────────────────
+
+# Disable directory listing (never show file tree in browser)
+Options -Indexes
+
+# Block direct HTTP access to sensitive config/helper PHP files
+# (they are included server-side by other PHP files, never requested directly)
+<FilesMatch "^(config|db|security-headers)\.php$">
+    Require all denied
+</FilesMatch>
+
+# Block common sensitive dotfiles / project manifest files
+<FilesMatch "^(\.(env|git|gitignore|htpasswd)|composer\.(json|lock)|package(-lock)?\.json)$">
+    Require all denied
+</FilesMatch>
+
+
+# ─── URL-Level Attack Filtering ───────────────────────────────────────────────
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ── Force HTTPS — PRODUCTION ONLY ────────────────────────────────────────
+    # Uncomment these two lines once you have a valid SSL certificate.
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # ── Block SQL injection patterns in query strings ─────────────────────────
+    RewriteCond %{QUERY_STRING} (union.*select|select.*from|insert.*into|drop\s+table|delete\s+from|update.*set|truncate\s+table) [NC]
+    RewriteRule .* - [F,L]
+
+    # ── Block XSS / script-injection patterns ────────────────────────────────
+    RewriteCond %{QUERY_STRING} (<script|javascript:|vbscript:|data:text/html|onload\s*=|onerror\s*=|onclick\s*=) [NC]
+    RewriteRule .* - [F,L]
+
+    # ── Block path-traversal attacks ─────────────────────────────────────────
+    RewriteCond %{REQUEST_URI} (\.\./|\.\.\\|%2e%2e) [NC]
+    RewriteRule .* - [F,L]
+
+    # ── Block null-byte injection ─────────────────────────────────────────────
+    RewriteCond %{QUERY_STRING} %00 [NC]
+    RewriteRule .* - [F,L]
+
+    # ── Block suspicious user-agents (scanners / exploit kits) ───────────────
+    RewriteCond %{HTTP_USER_AGENT} (nikto|sqlmap|nmap|masscan|zgrab|python-requests.*scan) [NC]
+    RewriteRule .* - [F,L]
+
+</IfModule>
