@@ -1,0 +1,16 @@
+# =============================================================================
+#  DATACAMP — php/ DIRECTORY ACCESS GUARD
+#
+#  Every file in this directory is a server-side include intended to be
+#  required/included by PHP pages, NEVER requested directly via a URL.
+#
+#  This .htaccess ensures that a browser hitting:
+#    http://localhost/DataCamp/php/config.php
+#    http://localhost/DataCamp/php/db.php
+#    http://localhost/DataCamp/php/security-headers.php
+#  receives a 403 Forbidden instead of having sensitive code / credentials
+#  exposed or executed in isolation.
+# =============================================================================
+
+# Deny all HTTP access to every file in this directory
+Require all denied
