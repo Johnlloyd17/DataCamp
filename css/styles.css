@@ -2998,6 +2998,16 @@ p {
     color: var(--primary-color);
 }
 
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
 .dashboard-help-text {
     font-size: 0.9rem;
     color: var(--text-light);
@@ -3059,6 +3069,7 @@ p {
     padding: 1.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative;
 }
 
 [data-theme="dark"] .project-card {
@@ -3073,6 +3084,49 @@ p {
 
 [data-theme="dark"] .project-card:hover {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.project-card-actions {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-card:hover .project-card-actions {
+    opacity: 1;
+}
+
+.project-action-btn {
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-theme="dark"] .project-action-btn {
+    background: var(--dark-bg-secondary);
+    border-color: var(--dark-border-color);
+}
+
+.project-action-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.project-action-btn.delete-btn:hover {
+    background: #dc3545;
+    border-color: #dc3545;
 }
 
 .project-tag {
@@ -3103,6 +3157,40 @@ p {
     color: var(--text-light);
     margin: 0.75rem 0 1.5rem;
     line-height: 1.5;
+}
+
+.project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+}
+
+.meta-item {
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .meta-item {
+    color: #bdc3c7;
+}
+
+.projects-loading,
+.projects-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+
+[data-theme="dark"] .projects-loading,
+[data-theme="dark"] .projects-empty {
+    color: #bdc3c7;
+}
+
+.error-color {
+    color: #dc3545;
 }
 
 [data-theme="dark"] .project-description {

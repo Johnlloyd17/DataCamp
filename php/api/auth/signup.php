@@ -135,7 +135,7 @@ try {
             ':org'           => $org,
             ':password_hash' => $passwordHash,
             ':status'        => 'active',
-            ':role'          => 'user',
+            ':role'          => 'client',
         ]
     );
 } catch (Throwable $e) {
@@ -150,7 +150,7 @@ session_regenerate_id(true);
 
 $_SESSION['user_id']      = $userId;
 $_SESSION['user_email']   = $email;
-$_SESSION['user_role']    = 'user';
+$_SESSION['user_role']    = 'client';
 $_SESSION['logged_in_at'] = time();
 
 http_response_code(201);
@@ -160,6 +160,6 @@ echo json_encode([
         'id'        => $userId,
         'email'     => $email,
         'full_name' => $fullName,
-        'role'      => 'user',
+        'role'      => 'client',
     ],
 ]);

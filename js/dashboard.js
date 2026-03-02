@@ -2,6 +2,479 @@
 // DASHBOARD PAGE - INTERACTIVE FEATURES
 // ==========================================
 
+// ==========================================
+// PROJECT CRUD OPERATIONS
+// ==========================================
+
+let currentEditProjectId = null;
+let currentDeleteProjectId = null;
+const API_BASE = './php/api';
+
+/**
+ * Load all projects from the API and display them
+ */
+async function loadProjects() {
+    try {
+        const response = await fetch(`${API_BASE}/projects.php`, {
+            credentials: 'include'
+        });
+
+        // Not logged in — redirect to sign-in page
+        if (response.status === 401) {
+            window.location.href = 'signin.html';
+            return;
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `Server error: ${response.status}`);
+        }
+        
+        const projects = await response.json();
+        displayProjects(projects);
+    } catch (error) {
+        console.error('Error loading projects:', error);
+        const projectsGrid = document.getElementById('projectsGrid');
+        if (projectsGrid) {
+            projectsGrid.innerHTML = `<div class="projects-loading" style="color: var(--error-color);">Failed to load projects: ${error.message}</div>`;
+        }
+    }
+}
+
+/**
+ * Display projects in the projects grid
+ */
+function displayProjects(projects) {
+    const projectsGrid = document.getElementById('projectsGrid');
+    if (!projectsGrid) return;
+
+    if (projects.length === 0) {
+            projectsGrid.innerHTML = `
+                <div class="projects-empty-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem 2rem; background: rgba(0, 123, 255, 0.05); border-radius: 8px; border: 2px dashed var(--border-color);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🚀</div>
+                    <h3 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-dark);">No projects yet</h3>
+                    <p style="color: var(--text-light); margin-bottom: 0; font-size: 1rem;">Get started by creating your first project.</p>
+                </div>
+            `;
+        return;
+    }
+
+    projectsGrid.innerHTML = projects.map(project => `
+        <div class="project-card" data-project-id="${project.id}">
+            <div class="project-card-actions">
+                <button class="project-action-btn edit-btn" title="Edit project" aria-label="Edit project">
+                    <span>✏️</span>
+                </button>
+                <button class="project-action-btn delete-btn" title="Delete project" aria-label="Delete project">
+                    <span>🗑️</span>
+                </button>
+            </div>
+            <div class="project-tag">${project.status === 'active' ? 'Active' : project.status === 'archived' ? 'Archived' : 'Completed'}</div>
+            <h3 class="project-name">${escapeHtml(project.name)}</h3>
+            <p class="project-description">${escapeHtml(project.description || 'No description')}</p>
+            <div class="project-meta">
+                ${project.start_date ? `<span class="meta-item">📅 ${project.start_date}</span>` : ''}
+                ${project.access_level ? `<span class="meta-item">🔒 ${project.access_level === 'all-access' ? 'All Access' : 'Invite Only'}</span>` : ''}
+            </div>
+            <div class="project-avatar">
+                <div class="avatar-circle">👤</div>
+            </div>
+        </div>
+    `).join('');
+
+    // Attach event listeners to action buttons
+    attachProjectActionListeners();
+}
+
+/**
+ * Escape HTML to prevent XSS
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+/**
+ * Attach event listeners to project action buttons
+ */
+function attachProjectActionListeners() {
+    // Edit buttons
+    document.querySelectorAll('.project-card .edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const projectCard = btn.closest('.project-card');
+            const projectId = projectCard.getAttribute('data-project-id');
+            openEditProjectModal(projectId);
+        });
+    });
+
+    // Delete buttons
+    document.querySelectorAll('.project-card .delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const projectCard = btn.closest('.project-card');
+            const projectId = projectCard.getAttribute('data-project-id');
+            openDeleteProjectModal(projectId);
+        });
+    });
+
+    // Project card click - view details
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const projectId = this.getAttribute('data-project-id');
+            viewProjectDetails(projectId);
+        });
+    });
+}
+
+/**
+ * Open edit project modal and populate with data
+ */
+async function openEditProjectModal(projectId) {
+    try {
+        // Fetch project data
+        const response = await fetch(`${API_BASE}/projects.php?id=${projectId}`, {
+            credentials: 'include'
+        });
+        if (!response.ok) throw new Error('Failed to load project');
+        
+        const project = await response.json();
+        
+        // Populate form fields
+        document.getElementById('editProjectId').value = project.id;
+        document.getElementById('editProjectName').value = project.name;
+        document.getElementById('editProjectDesc').value = project.description || '';
+        document.getElementById('editProjectStatus').value = project.status;
+        document.getElementById('editProjectAccess').value = project.access_level;
+        document.getElementById('editProjectStartDate').value = project.start_date || '';
+        document.getElementById('editProjectEndDate').value = project.end_date || '';
+        
+        // Handle all_access_type field
+        const accessTypeGroup = document.getElementById('editAccessTypeGroup');
+        const accessTypeSelect = document.getElementById('editProjectAccessType');
+        
+        if (project.access_level === 'all-access') {
+            accessTypeGroup.style.display = 'block';
+            accessTypeSelect.value = project.all_access_type || 'data-prove';
+        } else {
+            accessTypeGroup.style.display = 'none';
+            accessTypeSelect.value = 'data-prove';
+        }
+        
+        currentEditProjectId = project.id;
+        openModal('editProjectModal');
+    } catch (error) {
+        console.error('Error loading project:', error);
+        alert('Failed to load project. Please try again.');
+    }
+}
+
+/**
+ * Create new project
+ */
+async function createProject(formData) {
+    try {
+        // Capture tool selections - only true if explicitly checked
+        const tools = {
+            'message-board': document.getElementById('tool-messageBoard')?.checked === true,
+            'todos': document.getElementById('tool-todos')?.checked === true,
+            'docs-files': document.getElementById('tool-docs')?.checked === true,
+            'chat': document.getElementById('tool-chat')?.checked === true,
+            'schedule': document.getElementById('tool-schedule')?.checked === true,
+            'card-table': document.getElementById('tool-cardtable')?.checked === true
+        };
+        
+        console.log('Tools selected:', tools);
+
+        // Capture access level and all_access_type
+        const access_level = document.querySelector('input[name="projectAccess"]:checked')?.value || 'invite-only';
+        let all_access_type = null;
+        
+        if (access_level === 'all-access') {
+            all_access_type = document.querySelector('input[name="allAccessType"]:checked')?.value || 'data-prove';
+        }
+
+        const projectData = {
+            name: formData.get('projectName') || '',
+            description: formData.get('projectDesc') || '',
+            access_level: access_level,
+            all_access_type: all_access_type,
+            start_date: null,
+            end_date: null,
+            tools: tools
+        };
+        
+        console.log('Sending project data:', projectData);
+
+        const response = await fetch(`${API_BASE}/projects.php`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(projectData)
+        });
+
+        if (!response.ok) {
+            try {
+                const error = await response.json();
+                throw new Error(error.error || `HTTP ${response.status}: Failed to create project`);
+            } catch (e) {
+                throw new Error(`HTTP ${response.status}: Failed to create project`);
+            }
+        }
+
+        const newProject = await response.json();
+        closeModal('projectModal');
+        await loadProjects();
+        alert(`Project "${newProject.name}" created successfully!`);
+    } catch (error) {
+        console.error('Error creating project:', error);
+        alert(`Error: ${error.message}`);
+    }
+}
+
+/**
+ * Update project
+ */
+async function updateProject(projectId, formData) {
+    try {
+        const access_level = formData.get('access_level') || 'invite-only';
+        const all_access_type = access_level === 'all-access' ? (formData.get('all_access_type') || 'data-prove') : null;
+
+        const response = await fetch(`${API_BASE}/projects.php`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: projectId,
+                name: formData.get('name'),
+                description: formData.get('description'),
+                status: formData.get('status'),
+                access_level: access_level,
+                all_access_type: all_access_type,
+                start_date: formData.get('start_date') || null,
+                end_date: formData.get('end_date') || null
+            })
+        });
+
+        if (!response.ok) {
+            try {
+                const error = await response.json();
+                throw new Error(error.error || `HTTP ${response.status}: Failed to update project`);
+            } catch (e) {
+                throw new Error(`HTTP ${response.status}: Failed to update project`);
+            }
+        }
+
+        const updated = await response.json();
+        closeModal('editProjectModal');
+        await loadProjects();
+        alert(`Project "${updated.name}" updated successfully!`);
+    } catch (error) {
+        console.error('Error updating project:', error);
+        alert(`Error: ${error.message}`);
+    }
+}
+
+/**
+ * Delete project
+ */
+async function deleteProjectConfirmed(projectId) {
+    try {
+        const response = await fetch(`${API_BASE}/projects.php`, {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: projectId })
+        });
+
+        if (!response.ok) {
+            try {
+                const error = await response.json();
+                throw new Error(error.error || `HTTP ${response.status}: Failed to delete project`);
+            } catch (e) {
+                throw new Error(`HTTP ${response.status}: Failed to delete project`);
+            }
+        }
+
+        closeModal('deleteProjectModal');
+        await loadProjects();
+        alert('Project deleted successfully!');
+    } catch (error) {
+        console.error('Error deleting project:', error);
+        alert(`Error: ${error.message}`);
+    }
+}
+
+/**
+ * Open delete confirmation modal
+ */
+function openDeleteProjectModal(projectId) {
+    currentDeleteProjectId = projectId;
+    openModal('deleteProjectModal');
+}
+
+/**
+ * View project details
+ */
+async function viewProjectDetails(projectId) {
+    try {
+        const response = await fetch(`${API_BASE}/projects.php?id=${projectId}`, {
+            credentials: 'include'
+        });
+        if (!response.ok) throw new Error('Failed to load project');
+        
+        const project = await response.json();
+        
+        // Define all available tools
+        const allTools = [
+            { id: 'message-board', name: 'Message Board', icon: '💬', description: 'Post announcements, pitch ideas, and keep discussions on-topic.' },
+            { id: 'todos', name: 'To-dos', icon: '✓', description: 'Organize work, assign tasks, set due dates, and stay on top of things.' },
+            { id: 'docs-files', name: 'Docs & Files', icon: '📄', description: 'Share and organize docs, spreadsheets, images, and other files.' },
+            { id: 'chat', name: 'Chat', icon: '💭', description: 'Chat casually with your team and share things without ceremony.' },
+            { id: 'schedule', name: 'Schedule', icon: '📅', description: 'Set important dates on a shared schedule and sync with calendars.' },
+            { id: 'card-table', name: 'Card Table', icon: '📊', description: 'A Kanban-like tool for process-oriented work with visual organization.' }
+        ];
+        
+        // Filter tools to only show enabled ones
+        let toolsHtml = '';
+        if (project.tools && Object.keys(project.tools).length > 0) {
+            allTools.forEach(tool => {
+                if (project.tools[tool.id] === true) {
+                    toolsHtml += `
+                        <div class="tool-card-detail" data-tool="${tool.id}">
+                            <div class="tool-icon">${tool.icon}</div>
+                            <h4>${tool.name}</h4>
+                            <p>${tool.description}</p>
+                        </div>
+                    `;
+                }
+            });
+        }
+        
+        const detailContent = document.getElementById('projectDetailContent');
+        detailContent.innerHTML = `
+            <div class="project-detail-header">
+                <div>
+                    <h2>${escapeHtml(project.name)}</h2>
+                    <p style="color: var(--text-light); margin-top: 0.5rem;">
+                        <span style="background: rgba(0, 123, 255, 0.1); padding: 0.25rem 0.75rem; border-radius: 4px; display: inline-block; font-size: 0.85rem;">
+                            ${project.status === 'active' ? 'Active' : project.status === 'archived' ? 'Archived' : 'Completed'}
+                        </span>
+                    </p>
+                    ${project.description ? `<p style="margin-top: 1rem; color: var(--text-light);">${escapeHtml(project.description)}</p>` : ''}
+                </div>
+            </div>
+            
+            <div class="project-detail-tools">
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem;">Project Tools</h3>
+                <div class="tools-grid-detail">
+                    ${toolsHtml || '<p style="color: var(--text-light);">No tools enabled for this project.</p>'}
+                </div>
+            </div>
+            
+            <div class="project-detail-footer">
+                <button class="btn btn-secondary" onclick="closeModal('projectDetailModal')">Close</button>
+                <button class="btn btn-primary" onclick="openEditProjectModal(${project.id})">Edit Project</button>
+            </div>
+        `;
+        openModal('projectDetailModal');
+        attachToolCardHandlers();
+    } catch (error) {
+        console.error('Error loading project details:', error);
+        alert('Failed to load project details. Please try again.');
+    }
+}
+
+// Load projects on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadProjects();
+});
+
+// ==========================================
+// MODAL SETUP AND EVENT LISTENERS
+// ==========================================
+
+// Handle "Make a new project" button
+const makeProjectBtns = document.querySelectorAll('.btn-primary');
+makeProjectBtns.forEach(btn => {
+    if (btn.textContent.includes('Make a new project')) {
+        btn.addEventListener('click', () => {
+            openModal('projectModal');
+        });
+    }
+});
+
+// Handle project form submission
+const projectForm = document.getElementById('projectForm');
+if (projectForm) {
+    projectForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(projectForm);
+        await createProject(formData);
+        projectForm.reset();
+    });
+}
+
+// Handle edit project form submission
+const editProjectForm = document.getElementById('editProjectForm');
+if (editProjectForm) {
+    editProjectForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(editProjectForm);
+        if (currentEditProjectId) {
+            await updateProject(currentEditProjectId, formData);
+        }
+        editProjectForm.reset();
+    });
+}
+
+// Handle edit project access level change - show/hide all_access_type field
+const editProjectAccess = document.getElementById('editProjectAccess');
+const editAccessTypeGroup = document.getElementById('editAccessTypeGroup');
+if (editProjectAccess) {
+    editProjectAccess.addEventListener('change', () => {
+        if (editProjectAccess.value === 'all-access') {
+            editAccessTypeGroup.style.display = 'block';
+        } else {
+            editAccessTypeGroup.style.display = 'none';
+        }
+    });
+}
+
+// Handle delete project button
+const deleteProjectBtn = document.getElementById('deleteProjectBtn');
+if (deleteProjectBtn) {
+    deleteProjectBtn.addEventListener('click', () => {
+        closeModal('editProjectModal');
+        openDeleteProjectModal(currentEditProjectId);
+    });
+}
+
+// Handle delete confirmation
+const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+if (confirmDeleteBtn) {
+    confirmDeleteBtn.addEventListener('click', () => {
+        if (currentDeleteProjectId) {
+            deleteProjectConfirmed(currentDeleteProjectId);
+        }
+    });
+}
+
+// Handle delete cancellation
+const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+if (cancelDeleteBtn) {
+    cancelDeleteBtn.addEventListener('click', () => {
+        closeModal('deleteProjectModal');
+    });
+}
+
 // Initialize theme from localStorage
 function initializeDashboardTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -215,25 +688,6 @@ const inviteBtn = document.querySelector('.btn-secondary');
 if (inviteBtn) {
     inviteBtn.addEventListener('click', () => {
         openModal('inviteModal');
-    });
-}
-
-// Handle modal form submissions
-const projectForm = document.querySelector('#projectModal .modal-form');
-if (projectForm) {
-    projectForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const projectName = document.getElementById('projectName').value;
-        console.log('Creating project:', projectName);
-        alert(`Project "${projectName}" created successfully!`);
-        closeModal('projectModal');
-        // Reset form
-        e.target.reset();
-        // Reset tool toggles
-        document.querySelectorAll('.tool-checkbox').forEach((checkbox, index) => {
-            checkbox.checked = index < 5; // First 5 tools checked by default
-            updateToolStatus(checkbox);
-        });
     });
 }
 

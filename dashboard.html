@@ -91,30 +91,10 @@
 
             <!-- Sample Projects Section -->
             <section class="projects-section">
-                <h2 class="section-title">SAMPLE PROJECTS</h2>
-                <div class="projects-grid">
-                    <div class="project-card">
-                        <div class="project-tag">Sample</div>
-                        <h3 class="project-name">Getting Started</h3>
-                        <p class="project-description">Quickly get up to speed with everything Basecamp</p>
-                        <div class="project-avatar">
-                            <div class="avatar-circle">👤</div>
-                        </div>
-                    </div>
-                    <div class="project-card">
-                        <div class="project-tag">Sample</div>
-                        <h3 class="project-name">Making a Podcast</h3>
-                        <p class="project-description">🎙️ This is a sample project to showcase how we use Basecamp to make a podcast called REWORK. Take a look...</p>
-                        <div class="project-avatars">
-                            <div class="avatar-stack">
-                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
-                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
-                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
-                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
-                                <img src="https://placehold.co/28" alt="User" class="avatar-small">
-                            </div>
-                        </div>
-                    </div>
+                <h2 class="section-title">YOUR PROJECTS</h2>
+                <div class="projects-grid" id="projectsGrid">
+                    <!-- Dynamically populated from API -->
+                    <div class="projects-loading">Loading projects...</div>
                 </div>
             </section>
 
@@ -209,12 +189,12 @@
                     
                     <div class="form-group">
                         <label for="projectName">Name this project</label>
-                        <input type="text" id="projectName" placeholder="e.g Office Renovation" title="Project name" required>
+                        <input type="text" id="projectName" name="projectName" placeholder="e.g Office Renovation" title="Project name" required>
                     </div>
 
                     <div class="form-group">
                         <label for="projectDesc">Add a description <span class="optional">(optional)</span></label>
-                        <textarea id="projectDesc" placeholder="e.g Plans and scheduling for expanding the office" title="Project description" rows="3"></textarea>
+                        <textarea id="projectDesc" name="projectDesc" placeholder="e.g Plans and scheduling for expanding the office" title="Project description" rows="3"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -467,6 +447,81 @@
             <span class="modal-close">&times;</span>
             <div id="projectDetailContent">
                 <!-- Dynamically filled -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Project Modal -->
+    <div id="editProjectModal" class="modal">
+        <div class="modal-content modal-wide">
+            <span class="modal-close">&times;</span>
+            <h2>Edit Project</h2>
+            <form class="modal-form" id="editProjectForm">
+                <input type="hidden" id="editProjectId" name="project_id">
+
+                <div class="form-group">
+                    <label for="editProjectName">Project Name</label>
+                    <input type="text" id="editProjectName" name="name" placeholder="e.g Office Renovation" title="Project name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editProjectDesc">Description</label>
+                    <textarea id="editProjectDesc" name="description" placeholder="e.g Plans and scheduling for expanding the office" title="Project description" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="editProjectStatus">Status</label>
+                    <select id="editProjectStatus" name="status" title="Project status">
+                        <option value="active">Active</option>
+                        <option value="archived">Archived</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editProjectAccess">Access Level</label>
+                    <select id="editProjectAccess" name="access_level" title="Project access level">
+                        <option value="invite-only">Invite Only</option>
+                        <option value="all-access">All Access</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="editAccessTypeGroup" style="display: none;">
+                    <label for="editProjectAccessType">Access Type for All-Access</label>
+                    <select id="editProjectAccessType" name="all_access_type" title="All-access type">
+                        <option value="data-prove">Anyone from Data Prove</option>
+                        <option value="account">Anyone on account (except clients)</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group form-col">
+                        <label for="editProjectStartDate">Start Date (optional)</label>
+                        <input type="date" id="editProjectStartDate" name="start_date" title="Project start date">
+                    </div>
+                    <div class="form-group form-col">
+                        <label for="editProjectEndDate">End Date (optional)</label>
+                        <input type="date" id="editProjectEndDate" name="end_date" title="Project end date">
+                    </div>
+                </div>
+            </form>
+
+            <div class="form-actions">
+                <button type="submit" form="editProjectForm" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-danger" id="deleteProjectBtn">Delete Project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Project Confirmation Modal -->
+    <div id="deleteProjectModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Delete Project?</h2>
+            <p>Are you sure you want to delete this project? This action cannot be undone.</p>
+            <div class="form-actions" style="justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete Project</button>
             </div>
         </div>
     </div>

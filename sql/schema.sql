@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS `users` (
     `password_hash` VARCHAR(255)    NOT NULL,
     `status`        ENUM('active','suspended','pending')
                                     NOT NULL DEFAULT 'active',
-    `role`          ENUM('user','admin','moderator')
-                                    NOT NULL DEFAULT 'user',
+    `role`          ENUM('admin','project manager','viewer','client')
+                    NOT NULL DEFAULT 'client',
     `created_at`    DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`    DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP
                                              ON UPDATE CURRENT_TIMESTAMP,
@@ -110,6 +110,93 @@ CREATE TABLE IF NOT EXISTS `security_logs` (
     KEY `idx_logs_type`       (`log_type`),
     KEY `idx_logs_created_at` (`created_at`),
     KEY `idx_logs_user`       (`user_id`)
+
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+--  5. PROJECTS
+--  Project management table.
+--  • owner_id           — the user who created the project
+--  • status             — active projects vs archived/completed
+--  • access_level       — 'invite-only' or 'all-access'
+--  • all_access_type    — when access_level='all-access', specifies:
+--                         'data-prove' (anyone from Data Prove)
+--                         'account' (anyone on account except clients)
+--  • Description, start/end dates for project management
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS `projects` (
+    `id`                INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    `owner_id`          INT UNSIGNED    NOT NULL,
+    `name`              VARCHAR(255)    NOT NULL,
+    `description`       TEXT            NOT NULL DEFAULT '',
+    `status`            ENUM('active','archived','completed')
+                                        NOT NULL DEFAULT 'active',
+    `access_level`      ENUM('invite-only','all-access')
+                                        NOT NULL DEFAULT 'invite-only',
+    `all_access_type`   ENUM('data-prove','account')
+                                            NULL DEFAULT NULL,
+    `start_date`        DATE                NULL DEFAULT NULL,
+    `end_date`          DATE                NULL DEFAULT NULL,
+    `created_at`        DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`        DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP
+                                                 ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (`id`),
+    KEY `idx_projects_owner` (`owner_id`),
+    KEY `idx_projects_status` (`status`),
+    KEY `idx_projects_access` (`access_level`),
+    CONSTRAINT `fk_projects_owner` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+--  6. PROJECT_MEMBERS
+--  Links users to projects they're part of.
+--  • project_id     — the project
+--  • user_id        — the team member
+--  • role           — their role in the project
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS `project_members` (
+    `id`            INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    `project_id`    INT UNSIGNED    NOT NULL,
+    `user_id`       INT UNSIGNED    NOT NULL,
+    `role`          ENUM('owner','editor','viewer')
+                                    NOT NULL DEFAULT 'viewer',
+    `joined_at`     DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_project_members` (`project_id`, `user_id`),
+    KEY `idx_pm_user` (`user_id`),
+    CONSTRAINT `fk_pm_project` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_pm_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+--  7. PROJECT_TOOLS
+--  Tracks which tools are enabled for each project.
+--  • project_id     — the project
+--  • tool_name      — the tool (message-board, todos, docs-files, chat, schedule, card-table)
+--  • enabled        — whether the tool is active for this project
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS `project_tools` (
+    `id`            INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    `project_id`    INT UNSIGNED    NOT NULL,
+    `tool_name`     VARCHAR(50)     NOT NULL,
+    `enabled`       BOOLEAN         NOT NULL DEFAULT TRUE,
+    `created_at`    DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_project_tools` (`project_id`, `tool_name`),
+    CONSTRAINT `fk_pt_project` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE
 
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
